@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link rel="shortcut icon" type="image/x-icon" href="./img/logoTop.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="./css/account.css">
+</head>
+
+
+
+<body>
+
+    <div class="errBackground"></div>
+    <div class="msgBackground"></div>
+    <div class="forms"></div>
+
+    <div class="container">
+
+        <!-- aside -->
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" id="logo" alt="mekymaa">
+                    <h2><span class="danger">MEKY</span>MAA</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+            <div class="nav">
+                <a href="./account.html">
+                    <span class="material-icons-sharp primary">logout</span>
+                    <h3 class="primary">Cerrar sesion</h3>
+                </a>
+            </div>
+        </aside>
+
+        <!-- passwordForm -->
+        <main id="passwordForm" style="display: none;">
+            <form>
+                <h1>Cambiar contraseña</h1>
+                <input type="password" placeholder="Contraseña actual" class="small-text">
+                <input type="password" placeholder="Nueva contraseña" class="small-text">
+                <input type="password" placeholder="Confirmacion" class="small-text">
+                <input type="submit" value="Cambiar">
+                <p class="danger sesion"><a href="./index.html">¿No quieres cambiar tu contraseña? Regresar</a></p>
+            </form>
+        </main>
+
+        <!-- modifyForm -->
+        <main id="modifyForm" style="display: none;">
+            <form>
+                <h1>Modificar datos</h1>
+                <input type="text" placeholder="Nombre" class="small-text">
+                <input type="file" id="file" class="small-text">
+                <label for="file" class="small-text" id="fileLabel">Subir foto de perfil</label>
+                <input type="submit" value="¡Aplicar cambios!">
+                <p class="danger sesion"><a href="./index.html">¿No quieres modificar nada? Regresar</a></p>
+            </form>
+        </main>
+
+        <!-- right -->
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp">light_mode</span>
+                    <span class="material-icons-sharp active">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hola, <b>Fernando</b></p>
+                        <small class="small-text">Binvenido!</small>
+                    </div>
+                    <div class="profile-photo">
+                        <div><img src="./img/persona0.jpg" alt="example"></div>
+                    </div>
+                </div>
+            </div>
+            <a href="./index.html">
+                <div class="actual-people">
+                    <div class="item add-people">
+                        <div>
+                            <h3>Regresar</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- scripts -->
+        <script src="./js/main.js"></script>
+        <script src="./js/components.js"></script>
+
+    </div>
+
+</body>
+</html>

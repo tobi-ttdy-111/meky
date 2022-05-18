@@ -1,0 +1,623 @@
+
+<!DOCTYPE html>
+<html lang="es">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title"></title>
+    <link rel="shortcut icon" type="image/x-icon" href="./img/logoTop.png">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp" rel="stylesheet">
+    <link rel="stylesheet" href="./css/index.css">
+</head>
+
+
+
+<body>
+
+    <div class="errBackground"></div>
+    <div class="msgBackground"></div>
+    <div class="forms"></div>
+    <div class="forms" id="formsPlay">
+        <form>
+            <small>Partida pública</small>
+            <div class="actions">
+                <input type="text" placeholder="Nombre">
+                <input type="submit" value="Crear" class="primary">
+            </div>
+        </form>
+        <form>
+            <small>Partida privada</small>
+            <div class="actions">
+                <input type="text" placeholder="Nombre">
+                <input type="submit" value="Crear" class="danger">
+            </div>
+        </form>
+        <form>
+            <small>Unirse a privada</small>
+            <div class="actions">
+                <input type="text" placeholder="Código">
+                <input type="submit" value="Unirse" class="success">
+            </div>
+        </form>
+    </div>
+    <div class="forms" id="formsFriend">
+        <form>
+            <small>Añadir amigo</small>
+            <div class="actions">
+                <input type="text" placeholder="Id de jugador">
+                <input type="submit" value="Añadir" class="primary">
+            </div>
+        </form>
+    </div>
+    <div class="forms" id="formsDelete">
+        <form>
+            <small>¿Estas seguro de querer eliminar tu cuenta?</small>
+            <div class="actions">
+                <input type="text" placeholder="Escribe tu contraseña">
+                <input type="submit" value="Eliminar" class="primary">
+            </div>
+        </form>
+    </div>
+
+    <div class="container">
+
+        <!-- aside -->
+        <aside>
+            <div class="top">
+                <div class="logo">
+                    <img src="./img/logo.png" id="logo" alt="mekymaa">
+                    <h2><span class="danger">MEKY</span>MAA</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">close</span>
+                </div>
+            </div>
+            <div class="nav">
+                <a id="play">
+                    <span class="material-icons-sharp">play_arrow</span>
+                    <h3>Jugar</h3>
+                </a>
+                <a id="progress">
+                    <span class="material-icons-sharp">line_axis</span>
+                    <h3>Progreso</h3>
+                </a>
+                <a id="ranking">
+                    <span class="material-icons-sharp">leaderboard</span>
+                    <h3>Ranking</h3>
+                </a>
+                <a id="social">
+                    <span class="material-icons-sharp">mail_outline</span>
+                    <h3>Social</h3>
+                    <span class="message-count">18</span>
+                </a>
+                <a id="settings">
+                    <span class="material-icons-sharp">settings</span>
+                    <h3>Ajustes</h3>
+                </a>
+                <a href="./account.html">
+                    <span class="material-icons-sharp">logout</span>
+                    <h3>Cerrar sesión</h3>
+                </a>
+            </div>
+        </aside>
+
+        <!-- mainPlay -->
+        <main id="mainPlay" style="display: none;">
+            <h1>Modos de juego</h1>
+            <div class="cards">
+                <div class="card1" style="cursor: pointer;">
+                    <span class="material-icons-sharp">smart_toy</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Entrenamiento</h3>
+                        </div>
+                    </div>
+                    <small class="small-text">Aprende a mecanografiar, o si ya sabes practica y mejora tu nivel, en este modo no hay quien gane ya que es individual, asi que entrena y preparate para ganar tus proximas partidas.</small>
+                </div>
+                <div class="card2" style="cursor: pointer;" id="playNormal">
+                    <span class="material-icons-sharp">games</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Normal</h3>
+                        </div>
+                    </div>
+                    <small class="small-text">Aqui podras entrar a salas o crear tu propias partidas publicas / privadas, para enfrentarte contra otros jugadores y ver quien es el mas rápido.</small>
+                </div>
+                <div class="card3" style="cursor: pointer;">
+                    <span class="material-icons-sharp">stacked_line_chart</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>Clasificatoria</h3>
+                        </div>
+                    </div>
+                    <small class="small-text">Compite contra otro jugador para ganar mekypoints (mp's) y estar en el top de los 3 mejores jugadores, ¿Hasta cuantos mekypoints crees llegar?</small>
+                </div>
+            </div>
+            <div class="table-button">
+                <h1>Partidas por comenzar</h1>
+                <div class="scroll">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th class="ocult">Anfitrion</th>
+                                <th class="ocult">Nombre de partida</th>
+                                <th>Jugadores en sala</th>
+                                <th>¿Deseas unirte?</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="ocult">LicAaron</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">AnonymusPro</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">Veggetta 777  </td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">bbakka</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">hola</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                            <tr>
+                                <td class="ocult">tobi_ttdy_111</td>
+                                <td class="ocult">Aki va el nombre</td>
+                                <td class="success" >15/30</td>
+                                <td><a class="notPass">Unirme</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- mainProgress -->
+        <main id="mainProgress" style="display: none;">
+            <h1>Estadísticas</h1>
+            <div class="cards">
+                <div class="card1">
+                    <span class="material-icons-sharp">keyboard</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>ppm</h3>
+                            <h1>30ppm</h1>
+                        </div>
+                        <div class="progress">
+                            <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                            <div class="number"><p>30</p></div>
+                        </div>
+                    </div>
+                    <small class="small-text">Palabras por minuto</small>
+                </div>
+                <div class="card2">
+                    <span class="material-icons-sharp">emoji_events</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>win rate</h3>
+                            <h1>65%</h1>
+                        </div>
+                        <div class="progress">
+                            <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                            <div class="number"><p>65%</p></div>
+                        </div>
+                    </div>
+                    <small class="small-text">Porcentaje de victorias</small>
+                </div>
+                <div class="card3">
+                    <span class="material-icons-sharp">military_tech</span>
+                    <div class="middle">
+                        <div class="left">
+                            <h3>mp</h3>
+                            <h1>580mp</h1>
+                        </div>
+                        <div class="progress">
+                            <svg><circle cx="38" cy="38" r="36"></circle></svg>
+                            <div class="number"><p>580</p></div>
+                        </div>
+                    </div>
+                    <small class="small-text">Mekypoints </small>
+                </div>
+            </div>
+            <div class="table-button">
+                <h1 class="ocult2">Partidas recientes</h1>
+                <div class="scroll ocult2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tipo de partida</th>
+                                <th>Puesto</th>
+                                <th>Fecha</th>
+                                <th>Palabras por minuto</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                            <tr>
+                                <td>Partida pública</td>
+                                <td>1/15</td>
+                                <td class="success">00/00/0000</td>
+                                <td class="primary">20ppm</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- mainRanking -->
+        <main id="mainRanking" style="display: none;">
+            <h1>Mejores 3 jugadores</h1>
+            <div class="cards">
+                <div class="card1">
+                    <img src="./img/persona1.jpg" alt="persona1" class="profile-photo">
+                    <div class="middle">
+                        <div class="left">
+                            <h3 class="primary">TOP#1 Fernando Herrera</h3>
+                            <h1>4240mp</h1>
+                        </div>
+                    </div>
+                    <small class="small-text">ppm: 150 <br>Clasificación: diamante</small>
+                </div>
+                <div class="card2">
+                    <img src="./img/persona2.jpg" alt="persona1" class="profile-photo">
+                    <div class="middle">
+                        <div class="left">
+                            <h3 class="danger">TOP#2 Soy Dalto</h3>
+                            <h1>3500mp</h1>
+                        </div>
+                    </div>
+                    <small class="small-text">ppm: 130 <br>Clasificación: platino</small>
+                </div>
+                <div class="card3">
+                    <img src="./img/persona3.jpg" alt="persona1" class="profile-photo">
+                    <div class="middle">
+                        <div class="left">
+                            <h3 class="success">TOP#3 Fazt</h3>
+                            <h1>3400</h1>
+                        </div>
+                    </div>
+                    <small class="small-text">ppm: 122 <br>Clasificación: platino</small>
+                </div>
+            </div>
+            <div class="table-button">
+                <h1 class="ocult2">Ranking de tus amigos</h1>
+                <div class="scroll ocult2">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Mp</th>
+                                <th>Palabras por minuto</th>
+                                <th>%Win rate </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                            <tr>
+                                <td>LicAaron</td>
+                                <td class="danger">350 mp</td>
+                                <td class="success" >53ppm</td>
+                                <td class="primary" >33%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <!-- mainSocial -->
+        <main id="mainSocial" style="display: none;">
+            <h1>Chat global</h1>
+            <div class="chat">
+                <div class="messages">
+                    <div class="message">
+                        <p>Jugador: <span class="player">LicAaron</span></p>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus ab veritatis maiores itaque impedit dolorum voluptas labore pariatur corrupti doloribus, illo quidem veniam sapiente tempore eligendi commodi iste architecto fugiat!</p>
+                    </div>
+                    <div class="message">
+                        <p>Jugador: <span class="player">Horchata</span></p>
+                        <p>Si</p>
+                    </div>
+                    <div class="message">
+                        <p>Jugador: <span class="player">DanDr007</span></p>
+                        <p>Hola</p>
+                    </div>
+                    <div class="message">
+                        <p>Jugador: <span class="player">tobi_ttdy_111</span></p>
+                        <p>Nodejs le gana</p>
+                    </div>
+                    <div class="message">
+                        <p>Jugador: <span class="player">DanDr007</span></p>
+                        <p>>:|<p>
+                    </div>
+                </div>
+                <input type="text" placeholder="Enviar mensaje">
+            </div>
+        </main>
+
+        <!-- mainSettings -->
+        <main id="mainSettings" style="display: none;">
+            <h1>Información</h1>
+            <div class="cards">
+                <div class="card1">
+                    <img src="./img/persona0.jpg" alt="persona1" class="profile-photo">
+                    <div class="middle">
+                        <div class="left">
+                            <h3 class="primary">Fernando</h3>
+                            <h1>240pm</h1>
+                        </div>
+                    </div>
+                    <small class="small-text">Correo: victorroblesweb@gmail.com <br>id: 73042742348249</small>
+                </div>
+                <div class="actions">
+                    <a href="modify.html" class="success">Modificar datos</a>
+                    <a href="modify.html" class="primary">Cambiar contraseña</a>
+                    <a id="deleteAccount" class="danger">Eliminar cuenta</a>
+                </div>
+                <div class="card3">
+                    <div class="color">
+                        <input type="color" id="color1"><p>Color primario</p>
+                    </div>
+                    <div class="color">
+                        <input type="color" id="color2"><p>Color secundario</p>
+                    </div>
+                    <div class="color">
+                        <input type="color" id="color3"><p>Color terciario</p>
+                    </div>
+                    <div>
+                        <a href="./index.html"><small class="small-text">¿Ya terminaste?<br> Guarda cambios y mira la magia</small></a>
+                    </div>
+                </div>
+            </div>
+            <div class="table-button">
+            </div>
+        </main>
+
+        <!-- right -->
+        <div class="right">
+            <div class="top">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">menu</span>
+                </button>
+                <div class="theme-toggler">
+                    <span class="material-icons-sharp">light_mode</span>
+                    <span class="material-icons-sharp active">dark_mode</span>
+                </div>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hola, <b>Fernando</b></p>
+                        <small class="small-text">Binvenido!</small>
+                    </div>
+                    <div class="profile-photo">
+                        <div><img src="./img/persona0.jpg" alt="example"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="actual-people">
+                <div class="item online" style="cursor: pointer;">
+                    <div class="imgFriend"><img src="./img/persona5.jpg" alt="example"><div class="uy"></div></div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>LicAaron</h3>
+                            <small class="small-text">En partida clasificatoria</small>
+                        </div>
+                        <h3 class="success">+ 350 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <div><img src="./img/persona4.jpg" alt="example"></div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>angel_r</h3>
+                            <small class="small-text">En partida normal</small>
+                        </div>
+                        <h3 class="success">+ 340 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <div><img src="./img/persona6.jfif" alt="example"></div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>tobi_ttdy_111</h3>
+                            <small class="small-text">Conectado</small>
+                        </div>
+                        <h3 class="success">+ 280 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <div><img src="./img/persona7.jpg" alt="example"></div>
+                    <div class="right">
+                        <div class="info">
+                            <h3>DanDr007</h3>
+                            <small class="small-text">Conectado</small>
+                        </div>
+                        <h3 class="success">+ 180 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <span class="people"></span>
+                    <div class="right">
+                        <div class="info">
+                            <h3>Horchata</h3>
+                            <small class="small-text">Desconectado</small>
+                        </div>
+                        <h3 class="success">+ 100 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <img src="./img/persona2.jpg" alt="example">
+                    <div class="right">
+                        <div class="info">
+                            <h3>Soy Dalto</h3>
+                            <small class="small-text">Desconectado</small>
+                        </div>
+                        <h3 class="success">+ 3500 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <img src="./img/persona2.jpg" alt="example">
+                    <div class="right">
+                        <div class="info">
+                            <h3>Soy Dalto</h3>
+                            <small class="small-text">Desconectado</small>
+                        </div>
+                        <h3 class="success">+ 3500 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <img src="./img/persona2.jpg" alt="example">
+                    <div class="right">
+                        <div class="info">
+                            <h3>Soy Dalto</h3>
+                            <small class="small-text">Desconectado</small>
+                        </div>
+                        <h3 class="success">+ 3500 mp</h3>
+                    </div>
+                </div>
+                <div class="item online" style="cursor: pointer;">
+                    <img src="./img/persona2.jpg" alt="example">
+                    <div class="right">
+                        <div class="info">
+                            <h3>Soy Dalto</h3>
+                            <small class="small-text">Desconectado</small>
+                        </div>
+                        <h3 class="success">+ 3500 mp</h3>
+                    </div>
+                </div>
+                <div class="item add-people" style="cursor: pointer;" id="addFriend">
+                    <div>
+                        <span class="material-icons-sharp">add</span>
+                        <h3>Añadir amigo</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- scripts -->
+        <script src="./js/main.js"></script>
+        <script src="./js/components.js"></script>
+
+    </div>
+
+</body>
+</html>

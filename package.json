@@ -1,0 +1,19 @@
+{
+  "name": "mekymaa",
+  "version": "0.0.1",
+  "description": "mekymaa highlight with keyboard",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "tobi-ttdy-111",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-validator": "^6.14.0",
+    "mongoose": "^6.3.3"
+  }
+}
