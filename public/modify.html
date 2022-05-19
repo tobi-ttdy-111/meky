@@ -46,10 +46,10 @@
         <main id="passwordForm" style="display: none;">
             <form>
                 <h1>Cambiar contraseña</h1>
-                <input type="password" placeholder="Contraseña actual" class="small-text">
-                <input type="password" placeholder="Nueva contraseña" class="small-text">
-                <input type="password" placeholder="Confirmacion" class="small-text">
-                <input type="submit" value="Cambiar">
+                <input type="password" placeholder="Contraseña actual" class="small-text" id="actualPassword">
+                <input type="password" placeholder="Nueva contraseña" class="small-text" id="newPassword">
+                <input type="password" placeholder="Confirmacion" class="small-text" id="confirmPassword">
+                <input type="submit" value="Cambiar" id="submitModifyPassword">
                 <p class="danger sesion"><a href="./index.html">¿No quieres cambiar tu contraseña? Regresar</a></p>
             </form>
         </main>
@@ -100,6 +100,7 @@
         <!-- scripts -->
         <script src="./js/components.js"></script>
         <script src="./js/main.js"></script>
+        <script src="./js/modify.js"></script>
 
     </div>
 

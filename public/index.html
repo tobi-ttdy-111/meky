@@ -45,7 +45,7 @@
     </div>
     <div class="forms" id="formsFriend">
         <form>
-            <small>Añadir amigo</small>
+            <small>Añadir amigo</small><br>
             <div class="actions">
                 <input type="text" placeholder="Id de jugador">
                 <input type="submit" value="Añadir" class="primary">
@@ -54,7 +54,7 @@
     </div>
     <div class="forms" id="formsDelete">
         <form>
-            <small>¿Estas seguro de querer eliminar tu cuenta?</small>
+            <small>¿Estas seguro de querer eliminar tu cuenta?</small><br>
             <div class="actions">
                 <input type="text" placeholder="Escribe tu contraseña">
                 <input type="submit" value="Eliminar" class="primary">
@@ -470,8 +470,8 @@
                     <small class="small-text">Correo: victorroblesweb@gmail.com <br>id: 73042742348249</small>
                 </div>
                 <div class="actions">
-                    <a href="modify.html" class="success">Modificar datos</a>
-                    <a href="modify.html" class="primary">Cambiar contraseña</a>
+                    <a href="modify.html" class="success" onclick="localStorage.setItem( 'modify', 'data' ) ">Modificar datos</a>
+                    <a href="modify.html" class="primary" onclick="localStorage.setItem( 'modify', 'password' ) ">Cambiar contraseña</a>
                     <a id="deleteAccount" class="danger">Eliminar cuenta</a>
                 </div>
                 <div class="card3">
