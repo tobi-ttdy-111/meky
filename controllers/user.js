@@ -16,7 +16,6 @@ const postUser = async( req = request, res = response ) => {
 
     await user.save();
     res.json({ user });
-    // res.json({ 'errors': [{ msg: 'Ops uwu' }, { msg: 'uwuntu' }] });
 
 };
 
