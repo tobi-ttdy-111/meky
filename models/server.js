@@ -1,6 +1,7 @@
 
 // imports
 const express = require( 'express' );
+const fileUpload = require( 'express-fileupload' );
 const connection = require( '../database/connection' );
 
 
@@ -33,6 +34,11 @@ class Server {
 
         this.app.use( express.static( 'public' ) );
         this.app.use( express.json() );
+        this.app.use( fileUpload({
+            useTempFiles: true,
+            tempFileDir: '/tmp/',
+            createParentPath: true
+        }));
 
     };
 

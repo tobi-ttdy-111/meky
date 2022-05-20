@@ -242,11 +242,11 @@
                     <div class="middle">
                         <div class="left">
                             <h3>ppm</h3>
-                            <h1>30ppm</h1>
+                            <h1 id="ppmUser"></h1>
                         </div>
                         <div class="progress">
                             <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                            <div class="number"><p>30</p></div>
+                            <div class="number"><p id="ppmUserNumber"></p></div>
                         </div>
                     </div>
                     <small class="small-text">Palabras por minuto</small>
@@ -256,11 +256,11 @@
                     <div class="middle">
                         <div class="left">
                             <h3>win rate</h3>
-                            <h1>65%</h1>
+                            <h1 id="winrateUser"></h1>
                         </div>
                         <div class="progress">
                             <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                            <div class="number"><p>65%</p></div>
+                            <div class="number"><p id="winrateUserNumber"></p></div>
                         </div>
                     </div>
                     <small class="small-text">Porcentaje de victorias</small>
@@ -270,11 +270,11 @@
                     <div class="middle">
                         <div class="left">
                             <h3>mp</h3>
-                            <h1>580mp</h1>
+                            <h1 id="mpUser"></h1>
                         </div>
                         <div class="progress">
                             <svg><circle cx="38" cy="38" r="36"></circle></svg>
-                            <div class="number"><p>580</p></div>
+                            <div class="number"><p id="mpUserNumber"></p></div>
                         </div>
                     </div>
                     <small class="small-text">Mekypoints </small>
@@ -292,43 +292,7 @@
                                 <th>Palabras por minuto</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
-                            <tr>
-                                <td>Partida pública</td>
-                                <td>1/15</td>
-                                <td class="success">00/00/0000</td>
-                                <td class="primary">20ppm</td>
-                            </tr>
+                        <tbody id="historyUser">
                         </tbody>
                     </table>
                 </div>
@@ -459,16 +423,7 @@
         <main id="mainSettings" style="display: none;">
             <h1>Información</h1>
             <div class="cards">
-                <div class="card1">
-                    <img src="./img/persona0.jpg" alt="persona1" class="profile-photo">
-                    <div class="middle">
-                        <div class="left">
-                            <h3 class="primary">Fernando</h3>
-                            <h1>240pm</h1>
-                        </div>
-                    </div>
-                    <small class="small-text">Correo: victorroblesweb@gmail.com <br>id: 73042742348249</small>
-                </div>
+                <div class="card1" id="informationUser"></div>
                 <div class="actions">
                     <a href="modify.html" class="success" onclick="localStorage.setItem( 'modify', 'data' ) ">Modificar datos</a>
                     <a href="modify.html" class="primary" onclick="localStorage.setItem( 'modify', 'password' ) ">Cambiar contraseña</a>
@@ -503,15 +458,7 @@
                     <span class="material-icons-sharp">light_mode</span>
                     <span class="material-icons-sharp active">dark_mode</span>
                 </div>
-                <div class="profile">
-                    <div class="info">
-                        <p>Hola, <b>Fernando</b></p>
-                        <small class="small-text">Binvenido!</small>
-                    </div>
-                    <div class="profile-photo">
-                        <div><img src="./img/persona0.jpg" alt="example"></div>
-                    </div>
-                </div>
+                <div class="profile" id="profileUser"></div>
             </div>
             <div class="actual-people">
                 <div class="item online" style="cursor: pointer;">
@@ -616,6 +563,7 @@
         <!-- scripts -->
         <script src="./js/components.js"></script>
         <script src="./js/main.js"></script>
+        <script src="./js/index.js"></script>
 
     </div>
 

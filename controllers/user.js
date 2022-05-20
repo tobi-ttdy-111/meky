@@ -6,6 +6,15 @@ const cloudinary = require( 'cloudinary' );
 const User = require( '../database/user' );
 
 
+// getUser
+const getUser = async( req = request, res = response ) => {
+
+    const user = await User.findById( req.user._id );
+    res.json({ user });
+
+};
+
+
 // postUser
 const postUser = async( req = request, res = response ) => {
 
@@ -50,8 +59,8 @@ const putUserData = async( req = request, res = response ) => {
             const [ public_id ] = name.split( '.' );
             cloudinary.uploader.destroy( public_id );
         };
-        const { archivo } = req.files;
-        const { secure_url } = await cloudinary.uploader.upload( archivo.tempFilePath );
+        const { image } = req.files;
+        const { secure_url } = await cloudinary.uploader.upload( image.tempFilePath );
         img = secure_url;
     };
 
@@ -63,6 +72,7 @@ const putUserData = async( req = request, res = response ) => {
 
 // exports
 module.exports = {
+    getUser,
     postUser,
     putUserPassword,
     putUserData

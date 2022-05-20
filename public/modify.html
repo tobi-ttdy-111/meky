@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta User="viewport" content="width=device-width, initial-scale=1.0">
     <title id="title"></title>
     <link rel="shortcut icon" type="image/x-icon" href="./img/logoTop.png">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp" rel="stylesheet">
@@ -34,12 +34,6 @@
                     <span class="material-icons-sharp">close</span>
                 </div>
             </div>
-            <div class="nav">
-                <a href="./account.html">
-                    <span class="material-icons-sharp primary">logout</span>
-                    <h3 class="primary">Cerrar sesion</h3>
-                </a>
-            </div>
         </aside>
 
         <!-- passwordForm -->
@@ -58,10 +52,10 @@
         <main id="modifyForm" style="display: none;">
             <form>
                 <h1>Modificar datos</h1>
-                <input type="text" placeholder="Nombre" class="small-text">
+                <input type="text" placeholder="Nombre" class="small-text" id="name">
                 <input type="file" id="file" class="small-text">
                 <label for="file" class="small-text" id="fileLabel">Subir foto de perfil</label>
-                <input type="submit" value="¡Aplicar cambios!">
+                <input type="submit" value="¡Aplicar cambios!" id="submitModifyData">
                 <p class="danger sesion"><a href="./index.html">¿No quieres modificar nada? Regresar</a></p>
             </form>
         </main>
@@ -76,15 +70,7 @@
                     <span class="material-icons-sharp">light_mode</span>
                     <span class="material-icons-sharp active">dark_mode</span>
                 </div>
-                <div class="profile">
-                    <div class="info">
-                        <p>Hola, <b>Fernando</b></p>
-                        <small class="small-text">Binvenido!</small>
-                    </div>
-                    <div class="profile-photo">
-                        <div><img src="./img/persona0.jpg" alt="example"></div>
-                    </div>
-                </div>
+                <div class="profile" id="profileUser"></div>
             </div>
             <a href="./index.html">
                 <div class="actual-people">

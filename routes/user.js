@@ -2,7 +2,8 @@
 // imports
 const { Router } = require( 'express' );
 const { check } = require( 'express-validator' )
-const { postUser,
+const { getUser,
+        postUser,
         putUserPassword,
         putUserData } = require( '../controllers/user' );
 const { validateReq } = require( '../middlewares/validateReq' );
@@ -12,6 +13,10 @@ const { validateJwt } = require( '../middlewares/validateJwt' );
 
 // router
 const router = Router();
+
+
+// get /user
+router.get( '/user', validateJwt, getUser );
 
 
 // post /user
