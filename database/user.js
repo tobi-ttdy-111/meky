@@ -68,6 +68,11 @@ const schemaUser = new Schema({
 
     friends: {
         type: Array
+    },
+
+
+    slopes: {
+        type: Array
     }
 
 

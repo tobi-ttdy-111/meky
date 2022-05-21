@@ -7,9 +7,9 @@ const { getUser,
         putUserPassword,
         putUserData,
         deleteUser } = require( '../controllers/user' );
+const { validateJwt } = require( '../middlewares/validateJwt' );
 const { validateReq } = require( '../middlewares/validateReq' );
 const { existsEmail } = require( '../helpers/validations' );
-const { validateJwt } = require( '../middlewares/validateJwt' );
 
 
 // router
