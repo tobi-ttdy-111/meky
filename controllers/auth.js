@@ -14,7 +14,7 @@ const postAuth = async( req = request, res = response ) => {
     try {
         const user = await User.findOne({ email });
         if ( !user ) return res.status( 400 ).json({ 'errors': [{ msg: 'Correo / contraseña icorrectos' }] });
-        if ( !user.status ) return res.status( 400 ).json({ 'errors': [{ msg: 'Correo / contraseña icorrectos' }] });
+        if ( !user.status ) return res.status( 400 ).json({ 'errors': [{ msg: 'Tu cuenta a sido eliminada' }] });
         const match = bcrypjs.compareSync( password, user.password );
         if ( !match ) return res.status( 400 ).json({ 'errors': [{ msg: 'Correo / contraseña icorrectos' }] });
         const token = await generateJwt( user.id );

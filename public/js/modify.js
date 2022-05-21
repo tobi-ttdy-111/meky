@@ -1,20 +1,12 @@
 
 const token = localStorage.getItem( 'token' );
-const user = JSON.parse( localStorage.getItem( 'user' ) );
-if ( !token || !user ) {
-    createMessage(`
-        <form>
-            <small>Hemos perdido la conexion con tu cuenta, porfavor vuelve a iniciar sesión <br> </small>
-            <div class="actions">
-                <input type="button" value="Aceptar" class="danger all" id="ocultMessage">
-            </div>
-        </form>
-    `, 'err', 'ocultMessage', './account.html', undefined );
-};
+let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) {createMessage(`<form><small>Hemos perdido la conexion con tu cuenta<br> </small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`,'err','ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );};
+if ( !token || !user ) {createMessage(`<form><small>Hemos perdido la conexion con tu cuenta<br> </small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );removeItem( 'token' );localStorage.removeItem( 'user' );};
 
-const profileUser = document.querySelector( '#profileUser' );
-const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
-renderProfile( user );
+const profileUser = document.querySelector( '#profileUser' );const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};renderProfile( user );
+
+const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {
+            if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
 
 const actualPassword = document.querySelector( '#actualPassword' );
 const newPassword = document.querySelector( '#newPassword' );

@@ -49,23 +49,25 @@ const putUserPassword = async( req = request, res = response ) => {
 // put /user/data
 const putUserData = async( req = request, res = response ) => {
 
-    const { name } = req.body;
-
-    let img = req.user.img;
-    if ( req.files ) {
-        if ( img ) {
-            const nameArr = img.split( '/' );
-            const name = nameArr[ nameArr.length -1 ];
-            const [ public_id ] = name.split( '.' );
-            cloudinary.uploader.destroy( public_id );
+    try {
+        const { name } = req.body;
+        let img = req.user.img;
+        if ( req.files ) {
+            if ( img ) {
+                const nameArr = img.split( '/' );
+                const name = nameArr[ nameArr.length -1 ];
+                const [ public_id ] = name.split( '.' );
+                cloudinary.uploader.destroy( public_id );
+            };
+            const { image } = req.files;
+            const { secure_url } = await cloudinary.uploader.upload( image.tempFilePath );
+            img = secure_url;
         };
-        const { image } = req.files;
-        const { secure_url } = await cloudinary.uploader.upload( image.tempFilePath );
-        img = secure_url;
+        const user = await User.findByIdAndUpdate( req.user._id, { name, img } );
+        res.json({ user });
+    } catch ( err ) {
+        res.status( 400 ).json({ 'errors': [{ msg: 'El tipo de archivo que intentas ingresar no es válido' }] });
     };
-
-    const user = await User.findByIdAndUpdate( req.user._id, { name, img } );
-    res.json({ user });
 
 };
 
