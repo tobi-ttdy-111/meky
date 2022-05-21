@@ -56,9 +56,10 @@
         <form>
             <small>¿Estas seguro de querer eliminar tu cuenta?</small><br>
             <div class="actions">
-                <input type="text" placeholder="Escribe tu contraseña">
-                <input type="submit" value="Eliminar" class="primary">
+                <input type="password" placeholder="Escribe tu contraseña" id="passwordDelete">
+                <input type="button" value="Eliminar" class="primary" id="submitDelete">
             </div>
+            <small class="danger" id="msgErrDelete"><br></small>
         </form>
     </div>
 
@@ -97,7 +98,7 @@
                     <span class="material-icons-sharp">settings</span>
                     <h3>Ajustes</h3>
                 </a>
-                <a href="./account.html">
+                <a id="logout">
                     <span class="material-icons-sharp">logout</span>
                     <h3>Cerrar sesión</h3>
                 </a>

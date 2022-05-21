@@ -19,7 +19,7 @@ const validateJwt = async( req = request, res = response, next ) => {
         req.user = user;
         next();
     } catch ( err ) {
-        console.log( err );
+        // console.log( err );
         res.status( 400 ).json({ 'errors': [{ msg: 'Hemos perdido la conexion con tu cuenta' }] });
     };
 

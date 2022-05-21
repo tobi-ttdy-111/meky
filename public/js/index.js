@@ -1,7 +1,7 @@
 
 const token = localStorage.getItem( 'token' );
-let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) {createMessage(`<form><small>Hemos perdido la conexion con tu cuenta<br> </small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`,'err','ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );};
-if ( !token || !user ) {createMessage(`<form><small>Hemos perdido la conexion con tu cuenta<br> </small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );removeItem( 'token' );localStorage.removeItem( 'user' );};
+let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) { window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
+if ( !token || !user ) {window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
 
 const profileUser = document.querySelector( '#profileUser' );
 const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
@@ -62,3 +62,58 @@ renderInfo( user );
 
 const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {
     if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+
+const logout = document.querySelector( '#logout' );
+logout.addEventListener( 'click', () => {
+    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
+});
+
+const passwordDelete = document.querySelector( '#passwordDelete' );
+const submitDelete = document.querySelector( '#submitDelete' );
+const msgErrDelete = document.querySelector( '#msgErrDelete' );
+submitDelete.addEventListener( 'click', async( e ) => {
+    e.preventDefault();
+    await fetch( `${ domain }/user`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', token },
+        body: JSON.stringify({
+            'password': passwordDelete.value
+        })
+    })
+    .then( res => res.json() )
+    .then( data => {
+        if ( data.errors ) {
+            msgErrDelete.innerHTML = data.errors[0].msg;
+        } else {
+            msgBackground.style.top = '-100%';
+            formsDelete.style.top = '-50%';
+            createMessage(`<form><small>Has eliminado tu cuenta, si te gusta mekymaa y quieres seguir jugando deberás volver a iniciar sesión en otra cuenta</small><div class="actions"><input type="button" value="Iniciar sesión en otra cuenta" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
+        };
+    });
+});
+
+
+window.addEventListener( 'keypress', async( e ) => {
+
+    if ( e.keyCode === 13 && formsDelete.style.top == '50%' ) {
+        e.preventDefault();
+        await fetch( `${ domain }/user`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json', token },
+            body: JSON.stringify({
+                'password': passwordDelete.value
+            })
+        })
+        .then( res => res.json() )
+        .then( data => {
+            if ( data.errors ) {
+                msgErrDelete.innerHTML = data.errors[0].msg;
+            } else {
+                msgBackground.style.top = '-100%';
+                formsDelete.style.top = '-50%';
+                createMessage(`<form><small>Has eliminado tu cuenta, si te gusta mekymaa y quieres seguir jugando deberás volver a iniciar sesión en otra cuenta</small><div class="actions"><input type="button" value="Iniciar sesión en otra cuenta" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
+            };
+        });
+    };
+
+})

@@ -5,7 +5,8 @@ const { check } = require( 'express-validator' )
 const { getUser,
         postUser,
         putUserPassword,
-        putUserData } = require( '../controllers/user' );
+        putUserData,
+        deleteUser } = require( '../controllers/user' );
 const { validateReq } = require( '../middlewares/validateReq' );
 const { existsEmail } = require( '../helpers/validations' );
 const { validateJwt } = require( '../middlewares/validateJwt' );
@@ -44,7 +45,15 @@ router.put( '/user/data', [
     validateJwt,
     check( 'name', 'Tu nuevo nombre no puede quedar vacío' ).notEmpty(),
     validateReq
-], putUserData )
+], putUserData );
+
+
+// delete /user
+router.delete( '/user', [
+    validateJwt,
+    check( 'password', 'Ingresa tu contraseña' ).notEmpty(),
+    validateReq
+], deleteUser );
 
 
 // exports

@@ -30,7 +30,7 @@ const postUser = async( req = request, res = response ) => {
 };
 
 
-// put /user/password
+// putUserPassword
 const putUserPassword = async( req = request, res = response ) => {
 
     const { actualPassword, newPassword, confirmPassword } = req.body;
@@ -46,7 +46,7 @@ const putUserPassword = async( req = request, res = response ) => {
 };
 
 
-// put /user/data
+// putUserData
 const putUserData = async( req = request, res = response ) => {
 
     try {
@@ -72,10 +72,24 @@ const putUserData = async( req = request, res = response ) => {
 };
 
 
+// deleteUser
+const deleteUser = async( req = request, res = response ) => {
+
+    const { password } = req.body;
+    const match = bcrypjs.compareSync( password, req.user.password );
+    if ( !match ) return res.status( 400 ).json({ 'errors': [{ msg: 'Contraseña incorrecta' }] });
+
+    const user = await User.findByIdAndUpdate( req.user._id, { status: false });
+    res.json({ user });
+
+};
+
+
 // exports
 module.exports = {
     getUser,
     postUser,
     putUserPassword,
-    putUserData
+    putUserData,
+    deleteUser
 };
