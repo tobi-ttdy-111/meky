@@ -47,9 +47,10 @@
         <form>
             <small>Añadir amigo</small><br>
             <div class="actions">
-                <input type="text" placeholder="Id de jugador">
-                <input type="submit" value="Añadir" class="primary">
+                <input type="text" placeholder="Id de jugador" id="idFriendUser">
+                <input type="button" value="Añadir" class="primary" id="submitPutFriend">
             </div>
+            <small class="danger" id="msgErrPutFriend"><br></small>
         </form>
     </div>
     <div class="forms" id="formsDelete">
@@ -91,12 +92,13 @@
                 </a>
                 <a id="social">
                     <span class="material-icons-sharp">mail_outline</span>
-                    <h3>Social</h3>
+                    <h3>Social &nbsp;</h3>
                     <span class="message-count">18</span>
                 </a>
                 <a id="settings">
                     <span class="material-icons-sharp">settings</span>
                     <h3>Ajustes</h3>
+                    <span class="message-count" id="slopesCount" style="display: none;"></span>
                 </a>
                 <a id="logout">
                     <span class="material-icons-sharp">logout</span>
@@ -457,13 +459,7 @@
                                 <th>Rechazar</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="primary">350 mp</td>
-                                <td class="success" >Aceptar</td>
-                                <td class="danger" >Rechazar</td>
-                            </tr>
+                        <tbody id="slopesUser">
                         </tbody>
                     </table>
                 </div>
@@ -482,103 +478,7 @@
                 </div>
                 <div class="profile" id="profileUser"></div>
             </div>
-            <div class="actual-people">
-                <div class="item online" style="cursor: pointer;">
-                    <div class="imgFriend"><img src="./img/persona5.jpg" alt="example"><div class="uy"></div></div>
-                    <div class="right">
-                        <div class="info">
-                            <h3>LicAaron</h3>
-                            <small class="small-text">En partida clasificatoria</small>
-                        </div>
-                        <h3 class="success">+ 350 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <div><img src="./img/persona4.jpg" alt="example"></div>
-                    <div class="right">
-                        <div class="info">
-                            <h3>angel_r</h3>
-                            <small class="small-text">En partida normal</small>
-                        </div>
-                        <h3 class="success">+ 340 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <div><img src="./img/persona6.jfif" alt="example"></div>
-                    <div class="right">
-                        <div class="info">
-                            <h3>tobi_ttdy_111</h3>
-                            <small class="small-text">Conectado</small>
-                        </div>
-                        <h3 class="success">+ 280 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <div><img src="./img/persona7.jpg" alt="example"></div>
-                    <div class="right">
-                        <div class="info">
-                            <h3>DanDr007</h3>
-                            <small class="small-text">Conectado</small>
-                        </div>
-                        <h3 class="success">+ 180 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <span class="people"></span>
-                    <div class="right">
-                        <div class="info">
-                            <h3>Horchata</h3>
-                            <small class="small-text">Desconectado</small>
-                        </div>
-                        <h3 class="success">+ 100 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <img src="./img/persona2.jpg" alt="example">
-                    <div class="right">
-                        <div class="info">
-                            <h3>Soy Dalto</h3>
-                            <small class="small-text">Desconectado</small>
-                        </div>
-                        <h3 class="success">+ 3500 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <img src="./img/persona2.jpg" alt="example">
-                    <div class="right">
-                        <div class="info">
-                            <h3>Soy Dalto</h3>
-                            <small class="small-text">Desconectado</small>
-                        </div>
-                        <h3 class="success">+ 3500 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <img src="./img/persona2.jpg" alt="example">
-                    <div class="right">
-                        <div class="info">
-                            <h3>Soy Dalto</h3>
-                            <small class="small-text">Desconectado</small>
-                        </div>
-                        <h3 class="success">+ 3500 mp</h3>
-                    </div>
-                </div>
-                <div class="item online" style="cursor: pointer;">
-                    <img src="./img/persona2.jpg" alt="example">
-                    <div class="right">
-                        <div class="info">
-                            <h3>Soy Dalto</h3>
-                            <small class="small-text">Desconectado</small>
-                        </div>
-                        <h3 class="success">+ 3500 mp</h3>
-                    </div>
-                </div>
-                <div class="item add-people" style="cursor: pointer;" id="addFriend">
-                    <div>
-                        <span class="material-icons-sharp">add</span>
-                        <h3>Añadir amigo</h3>
-                    </div>
-                </div>
+            <div class="actual-people" id="friendsUser">
             </div>
         </div>
 

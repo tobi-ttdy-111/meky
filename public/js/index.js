@@ -60,13 +60,96 @@ const renderInfo = ( user ) => {
 };
 renderInfo( user );
 
-const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {
-    if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
 
-const logout = document.querySelector( '#logout' );
-logout.addEventListener( 'click', () => {
-    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
-});
+const friendsUser = document.querySelector( '#friendsUser' );
+const slopesUser = document.querySelector( '#slopesUser' );
+const slopesCount = document.querySelector( '#slopesCount' );
+const validateFriendImg = ( img, mensajes ) => {if ( !img ) { if ( !mensajes ) { return `<span class="people"></span>` } else { return `<span class="people"><div class="uy"></div></span>` }};if ( img ) { if ( !mensajes ) { return `<div class="imgFriend"><img src="${ img }" alt="example"></div>` } else { return `<div class="imgFriend"><img src="${ img }" alt="example"><div class="uy"></div></div>` }  }};
+const renderListFriends = ( listFriends ) => {
+    friendsUser.innerHTML = '';
+    listFriends.forEach( friend => {
+        try {
+            friendsUser.innerHTML += `
+            <div class="item online" style="cursor: pointer;" id="${ friend._id }">
+                ${ validateFriendImg( friend.img, undefined ) }
+                <div class="right">
+                    <div class="info">
+                        <h3>${ friend.name }</h3>
+                        <small class="small-text">Desconectado</small>
+                    </div>
+                    <h3 class="success">+ ${ friend.mp } mp</h3>
+                </div>
+            </div>
+        `;
+        } catch ( err ) {};
+    });
+    friendsUser.innerHTML += `
+    <div class="item add-people" style="cursor: pointer;" id="addFriend">
+        <div>
+            <span class="material-icons-sharp">add</span>
+            <h3>Añadir amigo</h3>
+        </div>
+    </div>`;
+    const addFriend = document.querySelector( '#addFriend' );const formsFriend = document.querySelector( '#formsFriend' );if ( addFriend ) { addFriend.addEventListener( 'click', () => { msgBackground.style.top = '0%', formsFriend.style.top = '50%' }) };
+};
+
+
+const renderListSlopes = ( listSlopes ) => { slopesUser.innerHTML = ''; const count = listSlopes.length;if ( count > 0 ) { slopesCount.innerHTML = count; slopesCount.style.display = ''; } if ( count == 0 ) { slopesCount.innerHTML = '0'; slopesCount.style.display = 'none' } listSlopes.forEach( slope => {slopesUser.innerHTML += `<tr><td>${ slope.name }</td><td class="primary">${ slope.mp } mp</td><td class="success acept" id="${ slope._id }" style="cursor: pointer;">Aceptar</td><td class="danger delete" id="${ slope._id }" style="cursor: pointer">Rechazar</td></tr>`});};
+
+const preaparateAcept = () => {
+    const acetps = document.querySelectorAll( '.acept' );
+    acetps.forEach( acept => acept.addEventListener( 'click', async() => {
+        await fetch( `${ domain }/friend/${ acept.id }/acept`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', token },
+        })
+        .then( res => res.json() )
+        .then( data => {
+            if ( data.errors ) {
+                createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Aceptar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+            } else {
+                loadFrieds();
+            };
+        });
+    }))
+};
+const preaparateDelete = () => {
+    const deletes = document.querySelectorAll( '.delete' );
+    deletes.forEach( delet => delet.addEventListener( 'click', async() => {
+        await fetch( `${ domain }/friend/${ delet.id }/delete`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', token },
+        })
+        .then( res => res.json() )
+        .then( data => {
+            if ( data.errors ) {
+                createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Aceptar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+            } else {
+                loadFrieds();
+            };
+        });
+    }))
+};
+
+const loadFrieds = async() => {
+    await fetch( `${ domain }/friend`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json', token },
+    })
+    .then( res => res.json() )
+    .then( data => {
+        if ( data.errors ) {
+            createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
+        } else {
+            renderListFriends( data.listFriends );
+            renderListSlopes( data.listSlopes );
+            preaparateAcept();
+            preaparateDelete();
+        };
+    });
+}; loadFrieds();
+
 
 const passwordDelete = document.querySelector( '#passwordDelete' );
 const submitDelete = document.querySelector( '#submitDelete' );
@@ -92,6 +175,50 @@ submitDelete.addEventListener( 'click', async( e ) => {
     });
 });
 
+// UPDATE FRIEND UWUS
+const updateFriend = ( id, friend ) => {
+    const friendUser = document.getElementById( id );
+    friendUser.innerHTML = `
+        ${ validateFriendImg( friend.img, undefined ) }
+        <div class="right">
+            <div class="info">
+                <h3>${ friend.name }</h3>
+                <small class="small-text">${ friend.status }</small>
+            </div>
+            <h3 class="success">+ ${ friend.mp } mp</h3>
+        </div>
+    `;
+};
+
+
+const idFriendUser = document.querySelector( '#idFriendUser' );
+const submitPutFriend = document.querySelector( '#submitPutFriend' );
+const msgErrPutFriend = document.querySelector( '#msgErrPutFriend' );
+submitPutFriend.addEventListener( 'click', async( e ) => {
+    e.preventDefault();
+    const id = idFriendUser.value || '000'
+    await fetch( `${ domain }/friend/${ id }`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', token },
+    })
+    .then( res => res.json() )
+    .then( data => {
+        if ( data.errors ) {
+            msgErrPutFriend.innerHTML = data.errors[0].msg;
+        } else {
+            msgBackground.style.top = '-100%';
+            formsFriend.style.top = '-50%';
+            createMessage(`<form><small>${ data.msg }</small><div class="actions"><input type="button" value="Aceptar" class="success all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+        };
+    });
+});
+
+// logout
+const logout = document.querySelector( '#logout' );
+logout.addEventListener( 'click', () => {
+    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', 'logoutComponent' );
+});
+
 
 window.addEventListener( 'keypress', async( e ) => {
 
@@ -115,5 +242,23 @@ window.addEventListener( 'keypress', async( e ) => {
             };
         });
     };
+    if ( e.keyCode === 13 && formsFriend.style.top == '50%' ) {
+        e.preventDefault();
+        const id = idFriendUser.value || '000'
+        await fetch( `${ domain }/friend/${ id }`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', token },
+        })
+        .then( res => res.json() )
+        .then( data => {
+            if ( data.errors ) {
+                msgErrPutFriend.innerHTML = data.errors[0].msg;
+            } else {
+                msgBackground.style.top = '-100%';
+                formsFriend.style.top = '-50%';
+                createMessage(`<form><small>${ data.msg }</small><div class="actions"><input type="button" value="Aceptar" class="success all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+            };
+        });
+    };
 
-})
+});
