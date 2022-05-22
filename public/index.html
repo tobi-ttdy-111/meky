@@ -306,36 +306,9 @@
         <main id="mainRanking" style="display: none;">
             <h1>Mejores 3 jugadores</h1>
             <div class="cards">
-                <div class="card1">
-                    <img src="./img/persona1.jpg" alt="persona1" class="profile-photo">
-                    <div class="middle">
-                        <div class="left">
-                            <h3 class="primary">TOP#1 Fernando Herrera</h3>
-                            <h1>4240mp</h1>
-                        </div>
-                    </div>
-                    <small class="small-text">ppm: 150 <br>Clasificación: diamante</small>
-                </div>
-                <div class="card2">
-                    <img src="./img/persona2.jpg" alt="persona1" class="profile-photo">
-                    <div class="middle">
-                        <div class="left">
-                            <h3 class="danger">TOP#2 Soy Dalto</h3>
-                            <h1>3500mp</h1>
-                        </div>
-                    </div>
-                    <small class="small-text">ppm: 130 <br>Clasificación: platino</small>
-                </div>
-                <div class="card3">
-                    <img src="./img/persona3.jpg" alt="persona1" class="profile-photo">
-                    <div class="middle">
-                        <div class="left">
-                            <h3 class="success">TOP#3 Fazt</h3>
-                            <h1>3400</h1>
-                        </div>
-                    </div>
-                    <small class="small-text">ppm: 122 <br>Clasificación: platino</small>
-                </div>
+                <div class="card1" id="top1"></div>
+                <div class="card2" id="top2"></div>
+                <div class="card3" id="top3"></div>
             </div>
             <div class="table-button">
                 <h1 class="ocult2">Ranking de tus amigos</h1>
@@ -349,44 +322,7 @@
                                 <th>%Win rate </th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                            <tr>
-                                <td>LicAaron</td>
-                                <td class="danger">350 mp</td>
-                                <td class="success" >53ppm</td>
-                                <td class="primary" >33%</td>
-                            </tr>
-                        </tbody>
+                        <tbody id="rankingFriendsUser"></tbody>
                     </table>
                 </div>
             </div>
@@ -485,6 +421,7 @@
         <!-- scripts -->
         <script src="./js/components.js"></script>
         <script src="./js/main.js"></script>
+        <script src="./socket.io/socket.io.js"></script>
         <script src="./js/index.js"></script>
 
     </div>
