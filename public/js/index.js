@@ -6,8 +6,21 @@ if ( !token || !user ) {window.location = './account.html';removeItem( 'token' )
 // VALIDAR USER
 const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { socketConnection();if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
 
+
+let socket = null;
+const socketConnection = () => {
+
+    socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Conectado' }});
+    socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );});
+
+    socket.on( 'loadFriends', () => loadFrieds( true ) );
+    socket.on( 'updateFriend', ({ user, actual }) => {updateFriend( user._id, user, actual )});
+
+};
+
+
 // LOAD FRIENDS
-const loadFrieds = async() => {
+const loadFrieds = async( getActuals ) => {
     await fetch( `${ domain }/friend`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', token },
@@ -22,9 +35,10 @@ const loadFrieds = async() => {
             renderRankingFriends( data.listFriends );
             preaparateAcept();
             preaparateDelete();
+            if ( getActuals ) { socket.emit( 'getActuals' ); }
         };
     });
-}; loadFrieds();
+}; loadFrieds( false );
 
 const friendsUser = document.querySelector( '#friendsUser' );
 const slopesUser = document.querySelector( '#slopesUser' );
@@ -95,8 +109,7 @@ const preaparateAcept = () => {
             if ( data.errors ) {
                 createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Aceptar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
             } else {
-                loadFrieds();
-                socket.emit( 'putUser' );
+                socket.emit( 'preaparateAcept', { id: acept.id });
             };
         });
     }))
@@ -252,14 +265,14 @@ submitDelete.addEventListener( 'click', async( e ) => {
 });
 
 // UPDATE FRIEND UWUS
-const updateFriend = ( id, friend ) => {
+const updateFriend = ( id, friend, actual ) => {
     const friendUser = document.getElementById( id );
     friendUser.innerHTML = `
         ${ validateFriendImg( friend.img, undefined ) }
         <div class="right">
             <div class="info">
                 <h3>${ friend.name }</h3>
-                <small class="small-text">${ friend.status }</small>
+                <small class="small-text">${ actual || 'Desconectado' }</small>
             </div>
             <h3 class="success">+ ${ friend.mp } mp</h3>
         </div>
@@ -285,6 +298,7 @@ submitPutFriend.addEventListener( 'click', async( e ) => {
             msgBackground.style.top = '-100%';
             formsFriend.style.top = '-50%';
             createMessage(`<form><small>${ data.msg }</small><div class="actions"><input type="button" value="Aceptar" class="success all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+            socket.emit( 'submitPutFriend', { id });
         };
     });
 });
@@ -339,12 +353,3 @@ window.addEventListener( 'keypress', async( e ) => {
     };
 
 });
-
-
-let socket = null;
-const socketConnection = () => {
-
-    socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' )}});
-    socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' ); localStorage.removeItem( 'user' )});
-
-};

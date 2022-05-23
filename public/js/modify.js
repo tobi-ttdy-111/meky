@@ -5,8 +5,7 @@ if ( !token || !user ) {window.location = './account.html';removeItem( 'token' )
 
 const profileUser = document.querySelector( '#profileUser' );const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};renderProfile( user );
 
-const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {
-if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else {socketConnection(); if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
 
 const actualPassword = document.querySelector( '#actualPassword' );
 const newPassword = document.querySelector( '#newPassword' );
@@ -100,3 +99,12 @@ submitModifyData.addEventListener( 'click', async( e ) => {
         };
     });
 });
+
+
+let socket = null;
+const socketConnection = () => {
+
+    socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Editando perfil' }});
+    socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );});
+
+};
