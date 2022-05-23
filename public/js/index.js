@@ -60,7 +60,7 @@ const renderListFriends = ( listFriends ) => {
                 <div class="right">
                     <div class="info">
                         <h3>${ friend.name }</h3>
-                        <small class="small-text">...</small>
+                        <small class="small-text">Desconectado</small>
                     </div>
                     <h3 class="success">+ ${ friend.mp } mp</h3>
                 </div>
@@ -82,7 +82,8 @@ const renderListSlopes = ( listSlopes ) => { slopesUser.innerHTML = ''; const co
 const renderRankingFriends = ( listFriends ) => {
 
     listFriends.push( user );
-    const rankingUsers = listFriends.sort( ( a, b ) => {
+    const listFriendsClean = listFriends.filter( Boolean );
+    const rankingUsers = listFriendsClean.sort( ( a, b ) => {
         if ( a.mp > b.mp ) { return -1 };
         if ( a.mp < b.mp ) { return 1 };
         return 0;
