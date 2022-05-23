@@ -25,6 +25,7 @@ class Users {
 
     // putActuals
     putActuals( id, actual ) { this.actuals[ id ] = actual };
+    putUsers( id, user ) { this.users[ id ] = user }
 
 
     // disconnectUser

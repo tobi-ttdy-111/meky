@@ -29,8 +29,14 @@ const socketController = async( socket = new Socket(), io ) => {
         };
     });
 
-    socket.on( 'putUser', async() => { user = await validateJwt( socket.handshake.headers[ 'token' ] ) });
-    socket.on( 'submitPutFriend', ( payload ) => {socket.to( payload.id ).emit( 'loadFriends' ); });
+    socket.on( 'putUser', async() => {
+        user = await validateJwt( socket.handshake.headers[ 'token' ] );
+        users.putUsers( user.id, user );
+        user.friends.forEach( friend => {
+            socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );
+        });
+    });
+    socket.on( 'submitPutFriend', ( payload ) => {socket.to( payload.id ).emit( 'loadFriends' );});
     socket.on( 'preaparateAcept', ( payload ) => {
         socket.to( payload.id ).emit( 'loadFriends' );
         socket.emit( 'loadFriends' );

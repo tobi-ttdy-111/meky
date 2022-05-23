@@ -3,6 +3,10 @@ const token = localStorage.getItem( 'token' );
 let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) { window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
 if ( !token || !user ) {window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
 
+const profileUser = document.querySelector( '#profileUser' );
+const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
+renderProfile( user );
+
 // VALIDAR USER
 const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { socketConnection();if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
 
@@ -56,7 +60,7 @@ const renderListFriends = ( listFriends ) => {
                 <div class="right">
                     <div class="info">
                         <h3>${ friend.name }</h3>
-                        <small class="small-text">Desconectado</small>
+                        <small class="small-text">...</small>
                     </div>
                     <h3 class="success">+ ${ friend.mp } mp</h3>
                 </div>
@@ -132,10 +136,6 @@ const preaparateDelete = () => {
     }))
 };
 
-// PROFILE USER
-const profileUser = document.querySelector( '#profileUser' );
-const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
-renderProfile( user );
 
 // PROGRESS
 const ppmUser = document.querySelector( '#ppmUser' );
