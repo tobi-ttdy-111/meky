@@ -8,7 +8,51 @@ const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<di
 renderProfile( user );
 
 // VALIDAR USER
-const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { socketConnection();if ( data.user != user ) { renderInfo( data.user ); renderProfile( data.user ); renderProgress( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+const chargeInformation = async( socket ) => {
+    await fetch( `${ domain }/init`,{
+        method: 'GET',headers: { 'Content-Type': 'application/json', token },
+    })
+    .then( res => res.json() )
+    .then( data => {
+        console.log( data );
+        if ( data.errors ) {
+            let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });
+            createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
+        } else {
+            socketConnection();
+            const users = data.users;
+            let listFriends = [];
+            let listSlopes = [];
+            data.user.friends.forEach( friend => {
+                const user = users.find( user => user._id == friend );
+                listFriends.push( user );
+            });
+            data.user.slopes.forEach( slope => {
+                const user = users.find( user => user._id == slope );
+                listSlopes.push( user );
+            });
+            const ranking = users.sort( ( a, b ) => {
+                if ( a.mp > b.mp ) { return -1 };
+                if ( a.mp < b.mp ) { return 1 };
+                return 0;
+            });
+            renderListFriends( listFriends );
+            renderListSlopes( listSlopes );
+            renderRankingFriends( listFriends );
+            renderRanking( ranking[ 0 ], ranking[ 1 ], ranking[ 2 ] );
+            preaparateAcept();
+            preaparateDelete();
+            if ( data.user != user ) {
+                renderInfo( data.user );
+                renderProfile( data.user );
+                renderProgress( data.user );
+                localStorage.setItem( 'user', JSON.stringify( data.user ) );
+                user = data.user;
+            };
+            if ( socket ) { socket.emit( 'getActuals' ) };
+        };
+    });
+}; chargeInformation();
 
 
 let socket = null;
@@ -17,32 +61,11 @@ const socketConnection = () => {
     socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Conectado' }});
     socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );});
 
-    socket.on( 'loadFriends', () => loadFrieds( true ) );
+    socket.on( 'loadFriends', () => chargeInformation() );
     socket.on( 'updateFriend', ({ user, actual }) => {updateFriend( user._id, user, actual )});
 
 };
 
-
-// LOAD FRIENDS
-const loadFrieds = async( getActuals ) => {
-    await fetch( `${ domain }/friend`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json', token },
-    })
-    .then( res => res.json() )
-    .then( data => {
-        if ( data.errors ) {
-            createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
-        } else {
-            renderListFriends( data.listFriends );
-            renderListSlopes( data.listSlopes );
-            renderRankingFriends( data.listFriends );
-            preaparateAcept();
-            preaparateDelete();
-            if ( getActuals ) { socket.emit( 'getActuals' ); }
-        };
-    });
-}; loadFrieds( false );
 
 const friendsUser = document.querySelector( '#friendsUser' );
 const slopesUser = document.querySelector( '#slopesUser' );
@@ -131,7 +154,7 @@ const preaparateDelete = () => {
             if ( data.errors ) {
                 createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Aceptar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
             } else {
-                loadFrieds();
+                chargeInformation();
             };
         });
     }))
@@ -192,53 +215,45 @@ const renderInfo = ( user ) => {
 
 
 // RANKING
+const renderRanking = ( userTop1, userTop2, userTop3 ) => {
+    const validateFriendImg = ( img ) => { if ( img ) { return `<img src="${ img }" alt="persona1" class="profile-photo">` } else { return `<span class="material-icons-sharp">a</span>` }}
+    top1.innerHTML = `
+        ${ validateFriendImg( userTop1.img ) }
+        <div class="middle">
+            <div class="left">
+                <h3 class="primary">TOP#1 ${ userTop1.name }</h3>
+                <h1>${ userTop1.mp }mp</h1>
+            </div>
+        </div>
+        <small class="small-text">ppm: ${ userTop1.ppm } <br>win rate: ${ userTop1.winrate }</small>
+    `;
+    top2.innerHTML = `
+        ${ validateFriendImg( userTop2.img ) }
+        <div class="middle">
+            <div class="left">
+                <h3 class="danger">TOP#2 ${ userTop2.name }</h3>
+                <h1>${ userTop2.mp }mp</h1>
+            </div>
+        </div>
+        <small class="small-text">ppm: ${ userTop2.ppm } <br>win rate: ${ userTop2.winrate }</small>
+    `;
+    top3.innerHTML = `
+        ${ validateFriendImg( userTop3.img ) }
+        <div class="middle">
+            <div class="left">
+                <h3 class="success">TOP#3 ${ userTop3.name }</h3>
+                <h1>${ userTop3.mp }mp</h1>
+            </div>
+        </div>
+        <small class="small-text">ppm: ${ userTop3.ppm } <br>win rate: ${ userTop3.winrate }</small>
+    `;
+};
+
+
+// RANKING
 const top1 = document.querySelector( '#top1' );
 const top2 = document.querySelector( '#top2' );
 const top3 = document.querySelector( '#top3' );
-const renderRanking = async() => {
-    await fetch( `${ domain }/ranking`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json', token },
-    })
-    .then( res => res.json() )
-    .then( data => {
-        if ( data.errors ) {
-            console.err( 'Ocurrio un error al cargar el ranking' );
-        } else {
-            const validateFriendImg = ( img ) => { if ( img ) { return `<img src="${ img }" alt="persona1" class="profile-photo">` } else { return `<span class="material-icons-sharp">a</span>` }}
-            top1.innerHTML = `
-                ${ validateFriendImg( data.top1.img ) }
-                <div class="middle">
-                    <div class="left">
-                        <h3 class="primary">TOP#1 ${ data.top1.name }</h3>
-                        <h1>${ data.top1.mp }mp</h1>
-                    </div>
-                </div>
-                <small class="small-text">ppm: ${ data.top1.ppm } <br>win rate: ${ data.top1.winrate }</small>
-            `;
-            top2.innerHTML = `
-                ${ validateFriendImg( data.top2.img ) }
-                <div class="middle">
-                    <div class="left">
-                        <h3 class="danger">TOP#2 ${ data.top2.name }</h3>
-                        <h1>${ data.top2.mp }mp</h1>
-                    </div>
-                </div>
-                <small class="small-text">ppm: ${ data.top2.ppm } <br>win rate: ${ data.top2.winrate }</small>
-            `;
-            top3.innerHTML = `
-                ${ validateFriendImg( data.top3.img ) }
-                <div class="middle">
-                    <div class="left">
-                        <h3 class="success">TOP#3 ${ data.top3.name }</h3>
-                        <h1>${ data.top3.mp }mp</h1>
-                    </div>
-                </div>
-                <small class="small-text">ppm: ${ data.top3.ppm } <br>win rate: ${ data.top3.winrate }</small>
-            `;
-        };
-    });
-}; renderRanking();
 
 
 const passwordDelete = document.querySelector( '#passwordDelete' );
@@ -307,7 +322,7 @@ submitPutFriend.addEventListener( 'click', async( e ) => {
 // logout
 const logout = document.querySelector( '#logout' );
 logout.addEventListener( 'click', () => {
-    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', 'logoutComponent' );
+    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );
 });
 
 
@@ -349,6 +364,7 @@ window.addEventListener( 'keypress', async( e ) => {
                 msgBackground.style.top = '-100%';
                 formsFriend.style.top = '-50%';
                 createMessage(`<form><small>${ data.msg }</small><div class="actions"><input type="button" value="Aceptar" class="success all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', undefined, undefined );
+                socket.emit( 'submitPutFriend', { id });
             };
         });
     };

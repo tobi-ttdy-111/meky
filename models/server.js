@@ -1,7 +1,7 @@
 
 // imports
 const express = require( 'express' );
-const { createServer } = require( 'http' )
+const { createServer } = require( 'http' );
 const fileUpload = require( 'express-fileupload' );
 const connection = require( '../database/connection' );
 const { socketController } = require( '../sockets/controller' );

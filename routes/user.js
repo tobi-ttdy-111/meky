@@ -2,7 +2,8 @@
 // imports
 const { Router } = require( 'express' );
 const { check } = require( 'express-validator' )
-const { getUser,
+const { getInit,
+        getUser,
         postUser,
         putUserPassword,
         putUserData,
@@ -14,6 +15,10 @@ const { existsEmail } = require( '../helpers/validations' );
 
 // router
 const router = Router();
+
+
+// get /init
+router.get( '/init', validateJwt, getInit )
 
 
 // get /user

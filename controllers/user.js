@@ -6,11 +6,21 @@ const cloudinary = require( 'cloudinary' );
 const User = require( '../database/user' );
 
 
-// getUser
-const getUser = async( req = request, res = response ) => {
+// getInit
+const getInit = async( req = request, res = response ) => {
 
     const user = await User.findById( req.user._id );
-    res.json({ user });
+    const users = await User.find({ status: true });
+
+    res.json({ user, users });
+
+};
+
+
+// getUser
+const getUser = ( req = request, res = response ) => {
+
+    res.json({ user: req.user });
 
 };
 
@@ -87,6 +97,7 @@ const deleteUser = async( req = request, res = response ) => {
 
 // exports
 module.exports = {
+    getInit,
     getUser,
     postUser,
     putUserPassword,
