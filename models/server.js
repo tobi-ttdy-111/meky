@@ -55,6 +55,7 @@ class Server {
         this.app.use( require( '../routes/auth' ) );
         this.app.use( require( '../routes/ranking' ) );
         this.app.use( require( '../routes/friend' ) );
+        this.app.use( require( '../routes/match' ) );
 
     };
 

@@ -111,7 +111,7 @@
         <main id="mainPlay" style="display: none;">
             <h1>Modos de juego</h1>
             <div class="cards">
-                <div class="card1" style="cursor: pointer;">
+                <div class="card1" style="cursor: pointer;" id="normalMatch">
                     <span class="material-icons-sharp">smart_toy</span>
                     <div class="middle">
                         <div class="left">
@@ -151,7 +151,7 @@
                                 <th>¿Deseas unirte?</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <!-- <tbody>
                             <tr>
                                 <td class="ocult">LicAaron</td>
                                 <td class="ocult">Aki va el nombre</td>
@@ -230,7 +230,7 @@
                                 <td class="success" >15/30</td>
                                 <td><a class="notPass">Unirme</a></td>
                             </tr>
-                        </tbody>
+                        </tbody> -->
                     </table>
                 </div>
             </div>
@@ -330,14 +330,10 @@
 
         <!-- mainSocial -->
         <main id="mainSocial" style="display: none;">
-            <h1>Chat global</h1>
+            <h1 id="chatWith"></h1>
             <div class="chat">
-                <div class="messages">
-                    <div class="message">
-                        <p>Jugador: <span class="player">LicAaron</span></p>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus ab veritatis maiores itaque impedit dolorum voluptas labore pariatur corrupti doloribus, illo quidem veniam sapiente tempore eligendi commodi iste architecto fugiat!</p>
-                    </div>
-                    <div class="message">
+                <div class="messages" id="messages">
+                    <!-- <div class="message">
                         <p>Jugador: <span class="player">Horchata</span></p>
                         <p>Si</p>
                     </div>
@@ -352,9 +348,9 @@
                     <div class="message">
                         <p>Jugador: <span class="player">DanDr007</span></p>
                         <p>>:|<p>
-                    </div>
+                    </div> -->
                 </div>
-                <input type="text" placeholder="Enviar mensaje">
+                <input type="text" placeholder="Enviar mensaje" id="message">
             </div>
         </main>
 

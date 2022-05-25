@@ -12,14 +12,17 @@ const users = new Users();
 // socketController
 const socketController = async( socket = new Socket(), io ) => {
 
+    // core
     let user = await validateJwt( socket.handshake.headers[ 'token' ] );
     let actual = socket.handshake.headers[ 'actual' ];
     if ( !user ) { return socket.disconnect(); };
     socket.join( user.id );
 
+    // put logica
     users.conectUser( user );
     users.putActuals( user.id, actual );
 
+    // emitir q me conecte we
     user.friends.forEach( friend => {
         socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );
         if ( actual != ( 'Editando perfil' || 'En partida' ) ) {
@@ -29,6 +32,7 @@ const socketController = async( socket = new Socket(), io ) => {
         };
     });
 
+    // actualizar user
     socket.on( 'putUser', async() => {
         user = await validateJwt( socket.handshake.headers[ 'token' ] );
         users.putUsers( user.id, user );
@@ -36,7 +40,11 @@ const socketController = async( socket = new Socket(), io ) => {
             socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );
         });
     });
+
+    // enviar soli
     socket.on( 'submitPutFriend', ( payload ) => {socket.to( payload.id ).emit( 'loadFriends' );});
+
+    // acepar soli
     socket.on( 'preaparateAcept', ( payload ) => {
         socket.to( payload.id ).emit( 'loadFriends' );
         socket.emit( 'loadFriends' );
@@ -47,10 +55,17 @@ const socketController = async( socket = new Socket(), io ) => {
     });
 
     // Limpiar cuando alguien se desconeta
-    socket.on('disconnect', () => {
+    socket.on( 'disconnect', () => {
         users.disconnectUser( user.id );
         users.disconnectActual( user.id );
         user.friends.forEach( friend => {socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );});
+    });
+
+    // mensajes
+    socket.on( 'sendMessage', ( payload ) => {
+        // users.sendMessage( payload );
+        // console.log( users.getMessages() );
+        io.emit( 'sendMessage', { payload });
     });
 
 };

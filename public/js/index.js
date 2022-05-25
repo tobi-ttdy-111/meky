@@ -14,7 +14,6 @@ const chargeInformation = async( socket ) => {
     })
     .then( res => res.json() )
     .then( data => {
-        console.log( data );
         if ( data.errors ) {
             let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });
             createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );
@@ -32,8 +31,8 @@ const chargeInformation = async( socket ) => {
                 listSlopes.push( user );
             });
             const ranking = users.sort( ( a, b ) => {
-                if ( a.mp > b.mp ) { return -1 };
-                if ( a.mp < b.mp ) { return 1 };
+                if ( a.ppm > b.ppm ) { return -1 };
+                if ( a.ppm < b.ppm ) { return 1 };
                 return 0;
             });
             renderListFriends( listFriends );
@@ -58,11 +57,20 @@ const chargeInformation = async( socket ) => {
 let socket = null;
 const socketConnection = () => {
 
+    const messages = document.querySelector( '#messages' );
     socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Conectado' }});
-    socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );});
 
     socket.on( 'loadFriends', () => chargeInformation() );
     socket.on( 'updateFriend', ({ user, actual }) => {updateFriend( user._id, user, actual )});
+
+    socket.on( 'sendMessage', ({ payload }) => {
+            messages.innerHTML += `
+            <div class="message">
+            <p>Jugador: <span class="player">${ payload.of }</span></p>
+            <p>${ payload.message }</p>
+            </div>
+        `;
+    });
 
 };
 
@@ -78,7 +86,7 @@ const renderListFriends = ( listFriends ) => {
     listFriends.forEach( friend => {
         try {
             friendsUser.innerHTML += `
-            <div class="item online" style="cursor: pointer;" id="${ friend._id }">
+            <div class="item online friend" style="cursor: pointer;" id="${ friend._id }">
                 ${ validateFriendImg( friend.img, undefined ) }
                 <div class="right">
                     <div class="info">
@@ -99,6 +107,7 @@ const renderListFriends = ( listFriends ) => {
         </div>
     </div>`;
     const addFriend = document.querySelector( '#addFriend' );const formsFriend = document.querySelector( '#formsFriend' );if ( addFriend ) { addFriend.addEventListener( 'click', () => { msgBackground.style.top = '0%', formsFriend.style.top = '50%' }) };
+    chargeChat();
 };
 const renderListSlopes = ( listSlopes ) => { slopesUser.innerHTML = ''; const count = listSlopes.length;if ( count > 0 ) { slopesCount.innerHTML = count; slopesCount.style.display = ''; } if ( count == 0 ) { slopesCount.innerHTML = '0'; slopesCount.style.display = 'none' } listSlopes.forEach( slope => {slopesUser.innerHTML += `<tr><td>${ slope.name }</td><td class="primary">${ slope.mp } mp</td><td class="success acept" id="${ slope._id }" style="cursor: pointer;">Aceptar</td><td class="danger delete" id="${ slope._id }" style="cursor: pointer">Rechazar</td></tr>`});};
 
@@ -107,8 +116,8 @@ const renderRankingFriends = ( listFriends ) => {
     listFriends.push( user );
     const listFriendsClean = listFriends.filter( Boolean );
     const rankingUsers = listFriendsClean.sort( ( a, b ) => {
-        if ( a.mp > b.mp ) { return -1 };
-        if ( a.mp < b.mp ) { return 1 };
+        if ( a.ppm > b.ppm ) { return -1 };
+        if ( a.ppm < b.ppm ) { return 1 };
         return 0;
     });
     rankingFriendsUser.innerHTML = ``;
@@ -175,9 +184,9 @@ const renderProgress = ( user ) => {
         historyUser.innerHTML += `
         <tr>
             <td>${ match.type }</td>
-            <td>${ match.rank }</td>
+            <td>#${ match.rank }</td>
             <td class="success">${ match.date }</td>
-            <td class="primary">${ match.ppm }</td>
+            <td class="primary">${ match.ppm }ppm</td>
         </tr>
         `
     });
@@ -225,7 +234,7 @@ const renderRanking = ( userTop1, userTop2, userTop3 ) => {
                 <h1>${ userTop1.mp }mp</h1>
             </div>
         </div>
-        <small class="small-text">ppm: ${ userTop1.ppm } <br>win rate: ${ userTop1.winrate }</small>
+        <small class="small-text">ppm: ${ userTop1.ppm } <br>win rate: ${ userTop1.winrate }%</small>
     `;
     top2.innerHTML = `
         ${ validateFriendImg( userTop2.img ) }
@@ -235,7 +244,7 @@ const renderRanking = ( userTop1, userTop2, userTop3 ) => {
                 <h1>${ userTop2.mp }mp</h1>
             </div>
         </div>
-        <small class="small-text">ppm: ${ userTop2.ppm } <br>win rate: ${ userTop2.winrate }</small>
+        <small class="small-text">ppm: ${ userTop2.ppm } <br>win rate: ${ userTop2.winrate }%</small>
     `;
     top3.innerHTML = `
         ${ validateFriendImg( userTop3.img ) }
@@ -245,7 +254,7 @@ const renderRanking = ( userTop1, userTop2, userTop3 ) => {
                 <h1>${ userTop3.mp }mp</h1>
             </div>
         </div>
-        <small class="small-text">ppm: ${ userTop3.ppm } <br>win rate: ${ userTop3.winrate }</small>
+        <small class="small-text">ppm: ${ userTop3.ppm } <br>win rate: ${ userTop3.winrate }%</small>
     `;
 };
 
@@ -322,8 +331,39 @@ submitPutFriend.addEventListener( 'click', async( e ) => {
 // logout
 const logout = document.querySelector( '#logout' );
 logout.addEventListener( 'click', () => {
-    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );
+    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' ); localStorage.removeItem( 'user' );
 });
+
+
+const chargeChat = () => {
+
+    const chatWith = document.querySelector( '#chatWith' );
+    const message = document.querySelector( '#message' );
+    let chat = null;
+    play.addEventListener( 'click', () => chat = null );
+    progress.addEventListener( 'click', () => chat = null );
+    ranking.addEventListener( 'click', () => chat = null );
+    settings.addEventListener( 'click', () => chat = null );
+    social.addEventListener( 'click', () => {
+        chatWith.innerHTML = 'Chat general';
+        chat = 'general'; console.log( chat );
+    });
+    const friends = document.querySelectorAll( '.friend' );
+    friends.forEach( friend => {
+        friend.addEventListener( 'click', () => {
+            chat = friend.id;
+            console.log( chat );
+        });
+    });
+    window.addEventListener( 'keypress', ( e ) => {
+        if ( e.keyCode === 13 && chat != null && message.value.trim().length > 0 ) {
+            // socket.emit( 'sendMessage', { of: user._id, to: chat, message: message.value });
+            socket.emit( 'sendMessage', { of: user.name, message: message.value } )
+            message.value = '';
+        };
+    });
+
+};
 
 
 // KEY PRESS
@@ -370,3 +410,7 @@ window.addEventListener( 'keypress', async( e ) => {
     };
 
 });
+
+
+const normalMatch = document.querySelector( '#normalMatch' );
+normalMatch.addEventListener( 'click', () => window.location = './game.html')

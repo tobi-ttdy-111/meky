@@ -1,4 +1,13 @@
 
+const token = localStorage.getItem( 'token' );
+let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) { window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
+if ( !token || !user ) {window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
+
+const profileUser = document.querySelector( '#profileUser' );const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};renderProfile( user );
+
+const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+
+
 // keyboard
 const key = document.querySelectorAll( '.key' );
 const teclaPresionada = ( e ) => {
@@ -39,7 +48,7 @@ const number = parseInt( Math.random() * ( consejos.length - 0 ) );
 here.innerHTML = consejos[ number ];
 const preloadAnimation = () => {
     TweenMax.to( preload, 1, {
-        delay: 0,
+        delay: 1.5,
         top: "-100%",
         ease: Expo.easeInOut
     });
@@ -61,7 +70,7 @@ const palabras = [
 
 
 // generarTexto
-for ( let i = 0; i <= 39; i++ ) {
+for ( let i = 0; i <= 10; i++ ) {
     const aleatory = parseInt( Math.random() * ( 5000 - 0 ) );
     texto.push( palabras[ aleatory ] );
 };
@@ -84,7 +93,7 @@ let timeInicio;
 
 
 // keyPress
-window.addEventListener( 'keypress', ( e ) => {
+window.addEventListener( 'keypress', async( e ) => {
     if ( totalLetras == parcialLetras ) {
         timeInicio = new Date();
         console.log( 'Has iniciado' )
@@ -101,10 +110,24 @@ window.addEventListener( 'keypress', ( e ) => {
     if ( totalLetras == 1 ) {
         let tiempoFin = new Date();
         const tiempoTotal = ( ( tiempoFin - timeInicio ) / 1000 ) / 60;
-        localStorage.setItem( 'tiempo', ( ( tiempoFin - timeInicio ) / 1000 ));
+        // localStorage.setItem( 'tiempo', ( ( tiempoFin - timeInicio ) / 1000 ));
         console.log( 'tiempo' + tiempoTotal )
         const ppm = 39 / tiempoTotal;
-        localStorage.setItem( 'ppm', parseInt( ppm + 1 ) );
+        // localStorage.setItem( 'ppm', parseInt( ppm + 1 ) );
+        await fetch( `${ domain }/match`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', token },
+            body: JSON.stringify({
+                'type': 'Partida Normal',
+                'rank': '1',
+                'date': new Date().toDateString(),
+                'ppm': parseInt( ppm + 1 )
+            })
+        })
+        .then( res => res.json() )
+        .then( data => {
+            window.location = './index.html';
+        });
     };
 });
 
