@@ -9,13 +9,7 @@ class Users {
         this.users = {};
         this.actuals = {};
         this.chats = [];
-        this.chats.push({ chat: [ 'general' ], messages: {} })
-
-        //     {
-        //         chat: [ '9823423246', '2937427834749087' ],
-        //         messages: {  }
-        //     }
-        // ]
+        this.chats.push({ chat: [ 'general' ], messages: [] })
 
     };
 
@@ -23,20 +17,26 @@ class Users {
     // get
     getUsers() { return Object.values( this.users ) };
     getActuals() { return Object.values( this.actuals ) };
-    getMessages() { return this.messages };
+    getGeneral() { return this.chats[ 0 ] }
+    getChat( user1, user2 ) { return this.chats.find( chat => chat.chat.includes( user1 && user2 ) ) };
 
 
     // sendMessage
     sendMessage( message ) {
-        if ( message.to == 'general' ) {
-            const chatGeneral = this.chats.find( chat => chat == 'general' );
-            console.log( 'Chat general', chatGeneral )
-        };
         this.chats.forEach( chat => {
             if ( chat.chat.includes( message.of && message.to ) ) {
-                
-            }
-        })
+                chat.messages.push({ name: message.name, message: message.message });
+                return;
+            };
+        });
+        this.chats.push({ chat: [ message.of, message.to ], messages: [{ name: message.name, message: message.message }] });
+    };
+
+    // sendMessage
+    sendGeneral( message ) {
+        this.chats.forEach( chat => {
+            if ( chat.chat == 'general' ) { chat.messages.push( message ) };
+        });
     };
 
 

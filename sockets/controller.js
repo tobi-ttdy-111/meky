@@ -17,6 +17,9 @@ const socketController = async( socket = new Socket(), io ) => {
     let actual = socket.handshake.headers[ 'actual' ];
     if ( !user ) { return socket.disconnect(); };
     socket.join( user.id );
+    socket.on( 'chatGeneral', () => {
+        socket.emit( 'chatGeneral', users.getGeneral() );
+    });
 
     // put logica
     users.conectUser( user );
@@ -58,14 +61,26 @@ const socketController = async( socket = new Socket(), io ) => {
     socket.on( 'disconnect', () => {
         users.disconnectUser( user.id );
         users.disconnectActual( user.id );
-        user.friends.forEach( friend => {socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );});
+        setTimeout(() => {
+            user.friends.forEach( friend => {socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );});
+        }, 3000 );
     });
 
     // mensajes
     socket.on( 'sendMessage', ( payload ) => {
-        // users.sendMessage( payload );
-        // console.log( users.getMessages() );
-        io.emit( 'sendMessage', { payload });
+        if ( payload.to == 'general' ) {
+            users.sendGeneral({ name: payload.name, message: payload.message });
+            io.emit( 'sendMessage', { to: 'general', name: payload.name, message: payload.message });
+            return
+        } else {
+            users.sendMessage( payload );
+            socket.emit( 'sendMessage', { to: payload.to, name: user.name, message: payload.message });
+            socket.to( payload.to ).emit( 'sendMessage', { to: payload.of, name: payload.name, message: payload.message, friend: user });
+        };
+    });
+    socket.on( 'getChat', ({ user2 }) => {
+        const chat = users.getChat( user.id, user2 );
+        socket.emit( 'getChat', chat );
     });
 
 };

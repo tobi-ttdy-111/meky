@@ -6,6 +6,10 @@ if ( !token || !user ) {window.location = './account.html';removeItem( 'token' )
 const profileUser = document.querySelector( '#profileUser' );
 const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
 renderProfile( user );
+const messages = document.querySelector( '#messages' );
+const messageCount = document.querySelector( '#messageCount' );
+let chat = null;
+
 
 // VALIDAR USER
 const chargeInformation = async( socket ) => {
@@ -54,22 +58,109 @@ const chargeInformation = async( socket ) => {
 }; chargeInformation();
 
 
+// aleatoryColor
+const aleatoryColor = () => {
+    const random = parseInt( Math.random() * ( 4 - 1 ) + 1 );
+    switch ( random ) {
+        case 1: return 'primary';
+        case 2: return 'success';
+        case 3: return 'danger';
+    };
+};
+
+
 let socket = null;
 const socketConnection = () => {
 
-    const messages = document.querySelector( '#messages' );
     socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Conectado' }});
 
     socket.on( 'loadFriends', () => chargeInformation() );
-    socket.on( 'updateFriend', ({ user, actual }) => {updateFriend( user._id, user, actual )});
+    socket.on( 'updateFriend', ({ user, actual }) => {updateFriend( user._id, user, actual, undefined )});
+    socket.on( 'chatGeneral', ( payload ) => renderChat( payload ) );
+    socket.on( 'getChat', ( payload ) => renderChat( payload ));
 
-    socket.on( 'sendMessage', ({ payload }) => {
+    socket.on( 'sendMessage', ( payload ) => {
+        if ( payload.to == 'general' ) {
+            if ( chat != 'general' ) { messageCount.innerHTML = '▼'; messageCount.style.display = ''; return }
+            if ( payload.to == 'general' ) {
+                messages.innerHTML += `
+                <div class="message">
+                <p><span class="player ${ aleatoryColor() }">${ payload.name } </span></p>
+                <p>${ payload.message }</p>
+                </div>
+                `;
+                messages.scrollTop = 100000000000;
+            };
+            return;
+        };
+        if ( chat == payload.to ) {
             messages.innerHTML += `
+                <div class="message">
+                <p><span class="player ${ aleatoryColor() }">${ payload.name } </span></p>
+                <p>${ payload.message }</p>
+                </div>
+            `;
+            messages.scrollTop = 100000000000;
+            return;
+        };
+        user.friends.forEach( friend => {
+            if ( payload.to == friend ) {
+                updateFriend( friend, payload.friend, 'Conectado', true )
+            };
+        });
+    });
+
+};
+
+
+// renderChat
+const renderChat = ( chat ) => {
+
+    messages.innerHTML = '';
+    if ( !chat ) return;
+    chat.messages.forEach( message => {
+        messages.innerHTML += `
             <div class="message">
-            <p>Jugador: <span class="player">${ payload.of }</span></p>
-            <p>${ payload.message }</p>
+            <p><span class="player ${ aleatoryColor() }">${ message.name } </span></p>
+            <p>${ message.message }</p>
             </div>
         `;
+    });
+
+};
+
+
+const chargeChat = () => {
+
+    const chatWith = document.querySelector( '#chatWith' );
+    const message = document.querySelector( '#message' );
+    play.addEventListener( 'click', () => chat = null );
+    progress.addEventListener( 'click', () => chat = null );
+    ranking.addEventListener( 'click', () => chat = null );
+    settings.addEventListener( 'click', () => chat = null );
+    social.addEventListener( 'click', () => {
+        chatWith.innerHTML = 'Chat general';
+        chat = 'general';
+        messageCount.style.display = 'none';
+        messages.scrollTop = 100000000000;
+        socket.emit( 'chatGeneral' );
+    });
+    const friends = document.querySelectorAll( '.friend' );
+    friends.forEach( friend => {
+        friend.addEventListener( 'click', () => {
+            chat = friend.id;
+            socialComponent();
+            chatWith.innerHTML = `Chat con ${ friend.children[ 1 ].children[ 0 ].children[ 0 ].innerHTML }`;
+            socket.emit( 'getChat', { user2: friend.id });
+            const uy = friend.querySelector( '.uy' );
+            if ( uy ) { friend.children[ 0 ].removeChild( uy ) }
+        });
+    });
+    window.addEventListener( 'keypress', ( e ) => {
+        if ( e.keyCode === 13 && chat != null && message.value.trim().length > 0 ) {
+            socket.emit( 'sendMessage', { of: user._id, to: chat, message: message.value, name: user.name });
+            message.value = '';
+        };
     });
 
 };
@@ -90,7 +181,7 @@ const renderListFriends = ( listFriends ) => {
                 ${ validateFriendImg( friend.img, undefined ) }
                 <div class="right">
                     <div class="info">
-                        <h3>${ friend.name }</h3>
+                        <h3 class="name">${ friend.name }</h3>
                         <small class="small-text">Desconectado</small>
                     </div>
                     <h3 class="success">+ ${ friend.mp } mp</h3>
@@ -289,11 +380,12 @@ submitDelete.addEventListener( 'click', async( e ) => {
     });
 });
 
+
 // UPDATE FRIEND UWUS
-const updateFriend = ( id, friend, actual ) => {
+const updateFriend = ( id, friend, actual, message ) => {
     const friendUser = document.getElementById( id );
     friendUser.innerHTML = `
-        ${ validateFriendImg( friend.img, undefined ) }
+    ${ validateFriendImg( friend.img, message ) }
         <div class="right">
             <div class="info">
                 <h3>${ friend.name }</h3>
@@ -303,7 +395,6 @@ const updateFriend = ( id, friend, actual ) => {
         </div>
     `;
 };
-
 
 const idFriendUser = document.querySelector( '#idFriendUser' );
 const submitPutFriend = document.querySelector( '#submitPutFriend' );
@@ -333,37 +424,6 @@ const logout = document.querySelector( '#logout' );
 logout.addEventListener( 'click', () => {
     createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' ); localStorage.removeItem( 'user' );
 });
-
-
-const chargeChat = () => {
-
-    const chatWith = document.querySelector( '#chatWith' );
-    const message = document.querySelector( '#message' );
-    let chat = null;
-    play.addEventListener( 'click', () => chat = null );
-    progress.addEventListener( 'click', () => chat = null );
-    ranking.addEventListener( 'click', () => chat = null );
-    settings.addEventListener( 'click', () => chat = null );
-    social.addEventListener( 'click', () => {
-        chatWith.innerHTML = 'Chat general';
-        chat = 'general'; console.log( chat );
-    });
-    const friends = document.querySelectorAll( '.friend' );
-    friends.forEach( friend => {
-        friend.addEventListener( 'click', () => {
-            chat = friend.id;
-            console.log( chat );
-        });
-    });
-    window.addEventListener( 'keypress', ( e ) => {
-        if ( e.keyCode === 13 && chat != null && message.value.trim().length > 0 ) {
-            // socket.emit( 'sendMessage', { of: user._id, to: chat, message: message.value });
-            socket.emit( 'sendMessage', { of: user.name, message: message.value } )
-            message.value = '';
-        };
-    });
-
-};
 
 
 // KEY PRESS
