@@ -80,6 +80,7 @@ const socketController = async( socket = new Socket(), io ) => {
     });
     socket.on( 'getChat', ({ user2 }) => {
         const chat = users.getChat( user.id, user2 );
+        // console.log( chat );
         socket.emit( 'getChat', chat );
     });
 

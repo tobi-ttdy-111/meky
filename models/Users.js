@@ -18,18 +18,30 @@ class Users {
     getUsers() { return Object.values( this.users ) };
     getActuals() { return Object.values( this.actuals ) };
     getGeneral() { return this.chats[ 0 ] }
-    getChat( user1, user2 ) { return this.chats.find( chat => chat.chat.includes( user1 && user2 ) ) };
+    getChat( user1, user2 ) {
+        let chatsito;
+        this.chats.forEach( chat => {
+            if ( chat.chat.includes( user1 ) && chat.chat.includes( user2 ) ) {
+                chatsito = chat;
+            };
+        });
+        return chatsito;
+    };
 
 
     // sendMessage
     sendMessage( message ) {
+        let exist = false;
         this.chats.forEach( chat => {
-            if ( chat.chat.includes( message.of && message.to ) ) {
-                chat.messages.push({ name: message.name, message: message.message });
-                return;
+            if ( chat.chat.includes( message.of ) && chat.chat.includes( message.to ) ) {
+                chat.messages.push({ name: message.name, message: message.message })
+                exist = true;
             };
         });
-        this.chats.push({ chat: [ message.of, message.to ], messages: [{ name: message.name, message: message.message }] });
+        if ( exist == false ) {
+            const chat = { chat: [ message.of, message.to ], messages: [{ name: message.name, message: message.message }]};
+            this.chats.push( chat );
+        };
     };
 
     // sendMessage

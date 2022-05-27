@@ -126,6 +126,7 @@ const renderChat = ( chat ) => {
             </div>
         `;
     });
+    messages.scrollTop = 100000000000;
 
 };
 
@@ -153,7 +154,8 @@ const chargeChat = () => {
             chatWith.innerHTML = `Chat con ${ friend.children[ 1 ].children[ 0 ].children[ 0 ].innerHTML }`;
             socket.emit( 'getChat', { user2: friend.id });
             const uy = friend.querySelector( '.uy' );
-            if ( uy ) { friend.children[ 0 ].removeChild( uy ) }
+            if ( uy ) { friend.children[ 0 ].removeChild( uy ) };
+            // messages.scrollTop = 100000000000;
         });
     });
     window.addEventListener( 'keypress', ( e ) => {
