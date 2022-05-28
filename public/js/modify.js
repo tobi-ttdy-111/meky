@@ -12,7 +12,6 @@ let socket = null;
 const socketConnection = () => {
 
     socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Editando perfil' }});
-    socket.on( 'disconnect', () => { createMessage(`<form><small>Hemos perdido la conexion con tu cuenta</small><div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined );});
 
 };
 
