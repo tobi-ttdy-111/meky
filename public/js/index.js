@@ -10,7 +10,6 @@ const messages = document.querySelector( '#messages' );
 const messageCount = document.querySelector( '#messageCount' );
 let chat = null;
 
-
 // VALIDAR USER
 const chargeInformation = async( socket ) => {
     await fetch( `${ domain }/init`,{
@@ -140,7 +139,7 @@ const chargeChat = () => {
     ranking.addEventListener( 'click', () => chat = null );
     settings.addEventListener( 'click', () => chat = null );
     social.addEventListener( 'click', () => {
-        chatWith.innerHTML = 'Chat general';
+        chatWith.innerHTML = '@everyone';
         chat = 'general';
         messageCount.style.display = 'none';
         messages.scrollTop = 100000000000;
@@ -151,11 +150,10 @@ const chargeChat = () => {
         friend.addEventListener( 'click', () => {
             chat = friend.id;
             socialComponent();
-            chatWith.innerHTML = `Chat con ${ friend.children[ 1 ].children[ 0 ].children[ 0 ].innerHTML }`;
+            chatWith.innerHTML = `@${ friend.children[ 1 ].children[ 0 ].children[ 0 ].innerHTML }`;
             socket.emit( 'getChat', { user2: friend.id });
             const uy = friend.querySelector( '.uy' );
             if ( uy ) { friend.children[ 0 ].removeChild( uy ) };
-            // messages.scrollTop = 100000000000;
         });
     });
     window.addEventListener( 'keypress', ( e ) => {
@@ -275,15 +273,15 @@ const renderProgress = ( user ) => {
     ppmUser.innerHTML = `${ user.ppm }ppm`;ppmUserNumber.innerHTML = user.ppm;winrateUser.innerHTML = `${ user.winrate }%`;winrateUserNumber.innerHTML = user.winrate;mpUser.innerHTML = `${ user.mp }mp`; mpUserNumber.innerHTML = user.mp;
     user.history.forEach( match => {
         historyUser.innerHTML += `
-        <tr>
-            <td>${ match.type }</td>
-            <td>#${ match.rank }</td>
-            <td class="success">${ match.date }</td>
-            <td class="primary">${ match.ppm }ppm</td>
-        </tr>
-        `
+            <tr>
+                <td>${ match.type }</td>
+                <td>#${ match.rank }</td>
+                <td class="success">${ match.date }</td>
+                <td class="primary">${ match.ppm }ppm</td>
+            </tr>
+            `
     });
-}; renderProgress( user );
+};
 
 const informationUser = document.querySelector( '#informationUser' );
 const renderInfo = ( user ) => {
@@ -424,7 +422,7 @@ submitPutFriend.addEventListener( 'click', async( e ) => {
 // logout
 const logout = document.querySelector( '#logout' );
 logout.addEventListener( 'click', () => {
-    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', undefined ); localStorage.removeItem( 'token' ); localStorage.removeItem( 'user' );
+    createMessage(`<form><small>¿Estas seguro de querer cerrar sesión?</small><div class="actions"><input type="button" value="Cerrar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './account.html', 'logoutComponent' );
 });
 
 
@@ -475,4 +473,4 @@ window.addEventListener( 'keypress', async( e ) => {
 
 
 const normalMatch = document.querySelector( '#normalMatch' );
-normalMatch.addEventListener( 'click', () => window.location = './game.html')
+normalMatch.addEventListener( 'click', () => window.location = './trainingMatch.html')

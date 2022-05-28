@@ -10,15 +10,28 @@ const postMatch = async( req = request, res = response ) => {
     const { type, rank, date, ppm } = req.body;
     const history = req.user.history;
 
-    let ppmUser;
-    if ( ppmUser == 0 ) {
-        ppmUser = ppm;
-    } else {
-        ppmUser = (req.user.ppm + ppm)/2;
-    };
+    let sumaPpm = 0;
+    history.forEach( match => sumaPpm += match.ppm );
+    sumaPpm += ppm;
+    const ppmUser = parseInt( sumaPpm / ( history.length + 1 ) );
+
+    if ( history.length >= 21 ) { history.shift() };
     history.push({ type, rank, date, ppm });
 
-    const user = await User.findByIdAndUpdate( req.user.id, ({ history, ppm: ppmUser, winrate: '100' }));
+    let newWinrate = req.user.winrate;
+    if ( type == 'Partida clasificatoria' ) {
+        newWinrate = 0;
+        let sumaRank = 0;
+        let totalClasifs = 0;
+        history.forEach( match => {
+            if ( match.type == 'Partida clasificatoria' ) { sumaRank += match.rank; totalClasifs += 1; };
+        });
+        totalClasifs += 1;
+        sumaRank += rank;
+        newWinrate = parseInt( ( ( sumaRank / totalClasifs ) - 2 ) * ( -100 ) );
+    };
+
+    const user = await User.findByIdAndUpdate( req.user.id, ({ history, ppm: ppmUser, winrate: newWinrate }));
     res.json({ user });
 
 };

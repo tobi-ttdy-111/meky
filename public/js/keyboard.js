@@ -54,13 +54,12 @@ const preloadAnimation = () => {
     });
 };
 preloadAnimation();
-if ( tema != 'dark' ) preloadLogo.src = '../images/logoTop.png';
+if ( tema != 'dark' ) preloadLogo.src = './img/logoTop.png';
 
 
 // main variables
 const text = document.querySelector( '#text' )
 let texto = [];
-const ppmInput = document.querySelector( '#ppm' );
 
 
 // palabras
@@ -70,7 +69,7 @@ const palabras = [
 
 
 // generarTexto
-for ( let i = 0; i <= 10; i++ ) {
+for ( let i = 0; i <= 39; i++ ) {
     const aleatory = parseInt( Math.random() * ( 5000 - 0 ) );
     texto.push( palabras[ aleatory ] );
 };
@@ -90,44 +89,51 @@ let totalLetras = textoDesestructurado.length;
 const parcialLetras = textoDesestructurado.length;
 let textoCompletado = '';
 let timeInicio;
+let phrases = 0;
 
 
 // keyPress
 window.addEventListener( 'keypress', async( e ) => {
-    if ( totalLetras == parcialLetras ) {
-        timeInicio = new Date();
-        console.log( 'Has iniciado' )
-    };
-    let key = e.key.toLocaleLowerCase();
-    let textoNuevo = '';
+    if ( totalLetras == parcialLetras ) { timeInicio = new Date() };
+    let key = e.key.toLocaleLowerCase(); let textoNuevo = '';
     if ( key == textoDesestructurado[ 0 ] ) {
         textoCompletado += textoDesestructurado[ 0 ]
         textoDesestructurado.shift();
         textoDesestructurado.forEach( palabra => textoNuevo += palabra );
-        text.innerHTML = `<span class="success">${ textoCompletado }</span>${ textoNuevo }`
+        text.innerHTML = `<span class="success" style="background: var( --color3 )">${ textoCompletado }</span>${ textoNuevo }`
         totalLetras -= 1;
+        if ( e.keyCode == 32 ) { phrases += 1 };
     };
     if ( totalLetras == 1 ) {
         let tiempoFin = new Date();
         const tiempoTotal = ( ( tiempoFin - timeInicio ) / 1000 ) / 60;
-        // localStorage.setItem( 'tiempo', ( ( tiempoFin - timeInicio ) / 1000 ));
-        console.log( 'tiempo' + tiempoTotal )
-        const ppm = 39 / tiempoTotal;
-        // localStorage.setItem( 'ppm', parseInt( ppm + 1 ) );
+        const ppm = parseInt( 39 / tiempoTotal );
         await fetch( `${ domain }/match`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', token },
             body: JSON.stringify({
-                'type': 'Partida Normal',
-                'rank': '1',
+                'type': 'Partida de entrenamiento',
+                'rank': 0,
                 'date': new Date().toDateString(),
-                'ppm': parseInt( ppm + 1 )
+                'ppm': ppm
+
             })
         })
         .then( res => res.json() )
         .then( data => {
-            window.location = './index.html';
+            if ( data.errors ) {
+                let msgs = '';
+                data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });
+                createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );
+            } else {
+                window.location = './index.html';
+            };
         });
     };
 });
 
+
+const exitMatch = document.querySelector( '#exitMatch' );
+exitMatch.addEventListener( 'click', () => {
+    createMessage(`<form><small>¿Estas seguro?</small><br><small>Esta partida no se registrará en tu historial</small><div class="actions"><input type="button" value="Abandonar" class="danger all" id="ocultMessage"></div></form>`, undefined, 'ocultMessage', './index.html', undefined );
+});
