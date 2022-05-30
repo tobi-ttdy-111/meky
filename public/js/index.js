@@ -39,8 +39,8 @@ const chargeInformation = async( socket ) => {
                 listSlopes.push( user );
             });
             const ranking = users.sort( ( a, b ) => {
-                if ( a.ppm > b.ppm ) { return -1 };
-                if ( a.ppm < b.ppm ) { return 1 };
+                if ( a.mp > b.mp ) { return -1 };
+                if ( a.mp < b.mp ) { return 1 };
                 return 0;
             });
             renderListFriends( listFriends );
@@ -247,7 +247,7 @@ const renderListFriends = ( listFriends ) => {
                         <h3 class="name">${ friend.name }</h3>
                         <small class="small-text">Desconectado</small>
                     </div>
-                    <h3 class="success">+ ${ friend.mp } mp</h3>
+                    <h3 class="success"> ${ friend.mp } mp</h3>
                 </div>
             </div>
         `;
@@ -270,8 +270,8 @@ const renderRankingFriends = ( listFriends ) => {
     listFriends.push( user );
     const listFriendsClean = listFriends.filter( Boolean );
     const rankingUsers = listFriendsClean.sort( ( a, b ) => {
-        if ( a.ppm > b.ppm ) { return -1 };
-        if ( a.ppm < b.ppm ) { return 1 };
+        if ( a.mp > b.mp ) { return -1 };
+        if ( a.mp < b.mp ) { return 1 };
         return 0;
     });
     rankingFriendsUser.innerHTML = ``;
