@@ -16,7 +16,7 @@ const postMatch = async( req = request, res = response ) => {
     const ppmUser = parseInt( sumaPpm / ( history.length + 1 ) );
 
     if ( history.length >= 21 ) { history.shift() };
-    history.push({ type, rank, date, ppm });
+    history.unshift({ type, rank, date, ppm });
 
     let newMp = req.user.mp;
     if ( mp ) { newMp = newMp + mp };
