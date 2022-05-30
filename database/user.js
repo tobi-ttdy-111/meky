@@ -57,7 +57,7 @@ const schemaUser = new Schema({
 
     mp: {
         type: Number,
-        default: 0
+        default: 100
     },
 
 

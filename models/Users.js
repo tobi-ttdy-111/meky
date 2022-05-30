@@ -75,22 +75,6 @@ class Users {
     };
 
 
-    /*
-    
-        algo: [
-            {
-                mp: 2323
-            },
-            {
-                mp: 234
-            },
-            {
-                mp: 2323
-            }
-        ]
-    
-    */
-
     // tails
     conectTail( user ) {
         this.tails.push( user );
@@ -109,3 +93,20 @@ class Users {
 
 // exports
 module.exports = Users;
+
+
+// let matchs = [
+
+//     {
+//         uid: 21392387ldh20o893reu,
+//         users: {
+//             asdjflkajdfasdfasdf,
+//             asdfa,sd
+//             fas,d
+//             fasdf,a
+//             sdf,a
+//             sdfas,df
+//         }
+//     }
+
+// ]

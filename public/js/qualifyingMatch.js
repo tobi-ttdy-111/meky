@@ -204,7 +204,7 @@ window.addEventListener( 'keypress', async( e ) => {
                     'rank': 2,
                     'date': new Date().toDateString(),
                     'ppm': ppm,
-                    'mp': -17
+                    'mp': -15
                 })
             })
             .then( res => res.json() )
@@ -214,7 +214,7 @@ window.addEventListener( 'keypress', async( e ) => {
                     data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });
                     createMessage(`<form><small>Ocurrio un error al guardar en tu historial esta partida</small><div class="actions"><input type="button" value="Regresar" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './index.html', undefined );
                 } else {
-                    createMessage(`<form><small><h2 class="danger">> > > DERROTA < < <</h2><br>Esta ves has perdido - 20mp<br>Con un total de: ${ ppm } ppm<br>Tu oponente a hecho: ${ ppmOponent }ppm</small><div class="actions"><input type="button" value="Regresar" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './index.html', undefined );
+                    createMessage(`<form><small><h2 class="danger">> > > DERROTA < < <</h2><br>Esta ves has perdido - 15mp<br>Con un total de: ${ ppm } ppm<br>Tu oponente a terminado antes</small><div class="actions"><input type="button" value="Regresar" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './index.html', undefined );
                 };
             });
         }

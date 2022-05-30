@@ -122,26 +122,34 @@ const socketConnection = () => {
         aceptMatch.style.display = '';
         setTimeout(() => {
                 if ( !acept ) {
-                    aceptMatch.value = '2';
+                    aceptMatch.value = '4';
                     setTimeout(() => {
                         if ( !acept ) {
-                            aceptMatch.value = '1';
+                            aceptMatch.value = '3';
                             setTimeout(() => {
-                                if ( !acept ) {
-                                    socket.emit( 'cancelMatch', pvp );
-                                    aceptMatch.value = 'Partida rechazada';
-                                    textQualify.innerHTML = '¿Estás listo para entrar a partida clasificatoria?'
-                                    aquaQualify.innerHTML = 'Rechazaste la partida';
-                                    findMatch.style.display = '';
-                                    cancelMatch.style.display = 'none';
-                                    aceptMatch.style.display = 'none';
-                                    aceptMatch.value = '3';
-                                    errBackground.style.top = '-100%';
-                                    acept = null;
-                                    pvp = null;
-                                    aceptPvp = null;
-                                };
-                        }, 1000);
+                                aceptMatch.value = '2';
+                                setTimeout(() => {
+                                    aceptMatch.value = '1';
+                                    setTimeout(() => {
+                                        setTimeout(() => {
+                                            if ( !acept ) {
+                                                socket.emit( 'cancelMatch', pvp );
+                                                aceptMatch.value = 'Partida rechazada';
+                                                textQualify.innerHTML = '¿Estás listo para entrar a partida clasificatoria?'
+                                                aquaQualify.innerHTML = 'Rechazaste la partida';
+                                                findMatch.style.display = '';
+                                                cancelMatch.style.display = 'none';
+                                                aceptMatch.style.display = 'none';
+                                                aceptMatch.value = '3';
+                                                errBackground.style.top = '-100%';
+                                                acept = null;
+                                                pvp = null;
+                                                aceptPvp = null;
+                                            };
+                                    }, 1000);
+                                    }, 1000);
+                                }, 1000);
+                            }, 1000);
                         };
                 }, 1000);
                 };
@@ -162,7 +170,7 @@ const socketConnection = () => {
         acept = null;
         pvp = null;
         aceptPvp = null;
-        aceptMatch.value = '3';
+        aceptMatch.value = '5';
         textQualify.innerHTML = 'Buscando partida...';
         findMatch.style.display = 'none';
         cancelMatch.style.display = '';
@@ -557,6 +565,7 @@ findMatch.addEventListener( 'click', () => {
     aceptMatch.style.display = 'none';
     socket.emit( 'findMatch' );
     errBackground.style.top = '0';
+    aceptMatch.value = '5'
 });
 
 cancelMatch.addEventListener( 'click', () => {
