@@ -457,7 +457,7 @@ const updateFriend = ( id, friend, actual, message ) => {
                 <h3>${ friend.name }</h3>
                 <small class="small-text">${ actual || 'Desconectado' }</small>
             </div>
-            <h3 class="success">+ ${ friend.mp } mp</h3>
+            <h3 class="success">${ friend.mp } mp</h3>
         </div>
     `;
 };

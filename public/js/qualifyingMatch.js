@@ -195,6 +195,7 @@ window.addEventListener( 'keypress', async( e ) => {
         const ppm = parseInt( 39 / tiempoTotal );
         socket.emit( 'finishQuialify', { user, ppm, tiempoTotal, to: pvp });
         if ( !eval && ppmOponent ) {
+            eval = true;
             await fetch( `${ domain }/match`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', token },
@@ -203,7 +204,7 @@ window.addEventListener( 'keypress', async( e ) => {
                     'rank': 2,
                     'date': new Date().toDateString(),
                     'ppm': ppm,
-                    'mp': -20
+                    'mp': -17
                 })
             })
             .then( res => res.json() )
