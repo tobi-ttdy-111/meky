@@ -9,7 +9,9 @@ class Users {
         this.users = {};
         this.actuals = {};
         this.chats = [];
-        this.chats.push({ chat: [ 'general' ], messages: [] })
+        this.chats.push({ chat: [ 'general' ], messages: [] });
+        this.tails = [];
+        this.matchs = [];
 
     };
 
@@ -27,6 +29,7 @@ class Users {
         });
         return chatsito;
     };
+    getMatchs() { return this.matchs };
 
 
     // sendMessage
@@ -60,7 +63,7 @@ class Users {
 
     // putActuals
     putActuals( id, actual ) { this.actuals[ id ] = actual };
-    putUsers( id, user ) { this.users[ id ] = user }
+    putUsers( id, user ) { this.users[ id ] = user };
 
 
     // disconnectUser
@@ -69,6 +72,35 @@ class Users {
     };
     disconnectActual( id ) {
         delete this.actuals[ id ];
+    };
+
+
+    /*
+    
+        algo: [
+            {
+                mp: 2323
+            },
+            {
+                mp: 234
+            },
+            {
+                mp: 2323
+            }
+        ]
+    
+    */
+
+    // tails
+    conectTail( user ) {
+        this.tails.push( user );
+    };
+    deleteTails( id ) {
+        let newTails = [];
+        this.tails.forEach( tail => {
+            if ( tail.id != id ) { newTails.push( tail ) };
+        });
+        this.tails = newTails;
     };
 
 

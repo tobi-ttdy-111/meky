@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Entrenamiento</title>
+    <title>Clasificatoria</title>
     <link rel="shortcut icon" type="image/x-icon" href="./img/logoTop.png">
     <link href="https://fonts.googleapis.com/css2?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="./css/index.css">
@@ -46,7 +46,8 @@
                 </div>
             </div>
             <div class="nav">
-                <p class="small-text"></p>
+                <p id="rank1"></p>
+                <p id="rank2"></p>
                 <a id="exitMatch">
                     <span class="material-icons-sharp">logout</span>
                     <h3>Abandonar</h3>
@@ -128,7 +129,9 @@
                 <div class="profile" id="profileUser"></div>
             </div>
             <div class="indications">
-                <p class="small-text">Partida normal</p>
+                <p id="oponentPhrases"></p>
+                <p class="success" id="mePhrases"></p>
+                <p>Partida clasificatoria</p>
             </div>
         </div>
 
@@ -136,7 +139,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.1.2/TweenMax.min.js"></script>
         <script src="./js/main.js"></script>
         <script src="./socket.io/socket.io.js"></script>
-        <script src="./js/trainingMatch.js"></script>
+        <script src="./js/qualifyingMatch.js"></script>
 
     </div>
 

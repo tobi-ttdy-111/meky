@@ -9,6 +9,11 @@ renderProfile( user );
 const messages = document.querySelector( '#messages' );
 const messageCount = document.querySelector( '#messageCount' );
 let chat = null;
+let acept = null;
+let pvp = null;
+let aceptPvp = null;
+localStorage.setItem( 'pvp', '' );
+localStorage.setItem( 'text', '' );
 
 // VALIDAR USER
 const chargeInformation = async( socket ) => {
@@ -108,6 +113,64 @@ const socketConnection = () => {
             };
         });
     });
+
+    socket.on( 'findMatch', ({ user }) => {
+        pvp = user._id;
+        textQualify.innerHTML = 'Partida encontrada',
+        findMatch.style.display = 'none';
+        cancelMatch.style.display = 'none';
+        aceptMatch.style.display = '';
+        setTimeout(() => {
+                if ( !acept ) {
+                    aceptMatch.value = '2';
+                    setTimeout(() => {
+                        if ( !acept ) {
+                            aceptMatch.value = '1';
+                            setTimeout(() => {
+                                if ( !acept ) {
+                                    socket.emit( 'cancelMatch', pvp );
+                                    aceptMatch.value = 'Partida rechazada';
+                                    textQualify.innerHTML = '¿Estás listo para entrar a partida clasificatoria?'
+                                    aquaQualify.innerHTML = 'Rechazaste la partida';
+                                    findMatch.style.display = '';
+                                    cancelMatch.style.display = 'none';
+                                    aceptMatch.style.display = 'none';
+                                    aceptMatch.value = '3';
+                                    errBackground.style.top = '-100%';
+                                    acept = null;
+                                    pvp = null;
+                                    aceptPvp = null;
+                                };
+                        }, 1000);
+                        };
+                }, 1000);
+                };
+        }, 1000);
+    });
+
+    socket.on( 'aceptMatch', ( payload ) => {
+        aceptPvp = payload.user._id;
+        if ( aceptPvp && acept ) {
+            socket.emit( 'qualifyingStarted' );
+            localStorage.setItem( 'text', payload.text );
+            localStorage.setItem( 'pvp', payload.user._id );
+            setTimeout(() => { window.location = './qualifyingMatch.html' }, 1000);
+        };
+    });
+
+    socket.on( 'cancelMatch', () => {
+        acept = null;
+        pvp = null;
+        aceptPvp = null;
+        aceptMatch.value = '3';
+        textQualify.innerHTML = 'Buscando partida...';
+        findMatch.style.display = 'none';
+        cancelMatch.style.display = '';
+        aceptMatch.style.display = 'none';
+        aquaQualify.innerHTML = 'El rival a rechazado la partida, regresaste a la cola';
+    });
+
+    socket.on( 'genText', ( text ) => { localStorage.setItem( 'text', text ); console.log( text ) } );
 
 };
 
@@ -272,10 +335,13 @@ const historyUser = document.querySelector( '#historyUser' );
 const renderProgress = ( user ) => {
     ppmUser.innerHTML = `${ user.ppm }ppm`;ppmUserNumber.innerHTML = user.ppm;winrateUser.innerHTML = `${ user.winrate }%`;winrateUserNumber.innerHTML = user.winrate;mpUser.innerHTML = `${ user.mp }mp`; mpUserNumber.innerHTML = user.mp;
     user.history.forEach( match => {
+        let rank = match.rank
+        if ( match.rank == 0 ) { rank = '//' };
+        if ( match.rank != 0 ) { rank = `#${ rank }` };
         historyUser.innerHTML += `
             <tr>
                 <td>${ match.type }</td>
-                <td>#${ match.rank }</td>
+                <td>${ rank }</td>
                 <td class="success">${ match.date }</td>
                 <td class="primary">${ match.ppm }ppm</td>
             </tr>
@@ -473,4 +539,45 @@ window.addEventListener( 'keypress', async( e ) => {
 
 
 const normalMatch = document.querySelector( '#normalMatch' );
-normalMatch.addEventListener( 'click', () => window.location = './trainingMatch.html')
+normalMatch.addEventListener( 'click', () => window.location = './trainingMatch.html');
+
+const qualifyMatch = document.querySelector( '#qualifyMatch' );qualifyMatch.addEventListener( 'click', () => {msgBackground.style.top = '0%', formsQualify.style.top = '50%';});
+
+
+const findMatch = document.querySelector( '#findMatch' );
+const cancelMatch = document.querySelector( '#cancelMatch' );
+const aceptMatch = document.querySelector( '#aceptMatch' );
+const textQualify = document.querySelector( '#textQualify' );
+const aquaQualify = document.querySelector( '#aquaQualify' );
+
+findMatch.addEventListener( 'click', () => {
+    textQualify.innerHTML = 'Buscando partida...';
+    findMatch.style.display = 'none';
+    cancelMatch.style.display = '';
+    aceptMatch.style.display = 'none';
+    socket.emit( 'findMatch' );
+    errBackground.style.top = '0';
+});
+
+cancelMatch.addEventListener( 'click', () => {
+    textQualify.innerHTML = '¿Estás listo para entrar a partida clasificatoria?';
+    findMatch.style.display = '';
+    cancelMatch.style.display = 'none';
+    aceptMatch.style.display = 'none';
+    errBackground.style.top = '-100%';
+    socket.emit( 'cancelMatch' );
+});
+
+aceptMatch.addEventListener( 'click', () => {
+    acept = true;
+    aceptMatch.value = 'Aceptada';
+    aquaQualify.innerHTML = 'Esperando rival ...';
+    socket.emit( 'aceptMatch', { pvp });
+    if ( acept && aceptPvp ) {
+        localStorage.setItem( 'pvp', aceptPvp );
+        socket.emit( 'qualifyingStarted' );
+        setTimeout(() => { window.location = './qualifyingMatch.html'; }, 1000);
+    } else {
+        socket.emit( 'findMatch' );
+    };
+});

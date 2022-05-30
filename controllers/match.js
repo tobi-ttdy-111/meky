@@ -7,7 +7,7 @@ const User = require( '../database/user' );
 // postMatch
 const postMatch = async( req = request, res = response ) => {
 
-    const { type, rank, date, ppm } = req.body;
+    const { type, rank, date, ppm, mp } = req.body;
     const history = req.user.history;
 
     let sumaPpm = 0;
@@ -17,6 +17,9 @@ const postMatch = async( req = request, res = response ) => {
 
     if ( history.length >= 21 ) { history.shift() };
     history.push({ type, rank, date, ppm });
+
+    let newMp = req.user.mp;
+    if ( mp ) { newMp = newMp + mp };
 
     let newWinrate = req.user.winrate;
     if ( type == 'Partida clasificatoria' ) {
@@ -31,7 +34,7 @@ const postMatch = async( req = request, res = response ) => {
         newWinrate = parseInt( ( ( sumaRank / totalClasifs ) - 2 ) * ( -100 ) );
     };
 
-    const user = await User.findByIdAndUpdate( req.user.id, ({ history, ppm: ppmUser, winrate: newWinrate }));
+    const user = await User.findByIdAndUpdate( req.user.id, ({ history, ppm: ppmUser, winrate: newWinrate, mp: newMp }));
     res.json({ user });
 
 };

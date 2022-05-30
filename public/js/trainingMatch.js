@@ -5,7 +5,15 @@ if ( !token || !user ) {window.location = './account.html';removeItem( 'token' )
 
 const profileUser = document.querySelector( '#profileUser' );const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};renderProfile( user );
 
-const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user}};});};validateUser();
+const validateUser = async() => {await fetch( `${ domain }/user`, {method: 'GET',headers: { 'Content-Type': 'application/json', token },}).then( res => res.json() ).then( data => {if ( data.errors ) {let msgs = '';data.errors.forEach( err => { msgs += `<small>${ err.msg }</small><br>` });createMessage(`<form>${ msgs }<div class="actions"><input type="button" value="Restaurar conexion" class="danger all" id="ocultMessage"></div></form>`, 'err', 'ocultMessage', './account.html', undefined );localStorage.removeItem( 'token' );localStorage.removeItem( 'user' );} else { if ( data.user != user ) { renderProfile( data.user ); localStorage.setItem( 'user', JSON.stringify( data.user ) ); user = data.user; socketConnection()}};});};validateUser();
+
+
+let socket = null;
+const socketConnection = () => {
+
+    socket = io({ 'extraHeaders': { 'token': localStorage.getItem( 'token' ), 'actual': 'Entrenando' }});
+
+};
 
 
 // keyboard
@@ -36,19 +44,13 @@ const preload = document.querySelector( '.preload' );
 const here = document.querySelector( '#here' );
 const opps = document.querySelector( '#opps' );
 const consejos = [
-    'Puedes aprender técnicas mecanografias <br> en el modo de juego Entrenamiento',
-    '¿Pierdes mucho? intenta aprendiendo <br> a mecanografiar en el modo entrenamiento',
-    'Puedes personalizar la aplicacion <br> en el apartado de ajustes',
-    'Establece tu foto de perfil en el <br> apartado de ajustes en modificar datos',
-    'Agrega amigos por medio de su id <br> que se encuentra en la pestaña de ajustes',
-    '¿Estas aburrido? prueba a jugar clasificatoria',
-    '¿Quieres jugar con un grupo de amigos? <br> crea una sala privada'
+    'Sabías que javaScript es mejor que java'
 ];
 const number = parseInt( Math.random() * ( consejos.length - 0 ) );
 here.innerHTML = consejos[ number ];
 const preloadAnimation = () => {
     TweenMax.to( preload, 1, {
-        delay: 1.5,
+        delay: 0,
         top: "-100%",
         ease: Expo.easeInOut
     });

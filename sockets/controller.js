@@ -2,6 +2,7 @@
 // imports
 const { Socket } = require( 'socket.io' );
 const { validateJwt } = require('../helpers/validateJwt');
+const { generarTexto } = require( '../helpers/generateText' );
 const Users = require( '../models/Users' );
 
 
@@ -64,6 +65,7 @@ const socketController = async( socket = new Socket(), io ) => {
         setTimeout(() => {
             user.friends.forEach( friend => {socket.to( friend ).emit( 'updateFriend', { user, actual: users.actuals[ user.id ] } );});
         }, 3000 );
+        users.deleteTails( user.id );
     });
 
     // mensajes
@@ -80,9 +82,51 @@ const socketController = async( socket = new Socket(), io ) => {
     });
     socket.on( 'getChat', ({ user2 }) => {
         const chat = users.getChat( user.id, user2 );
-        // console.log( chat );
         socket.emit( 'getChat', chat );
     });
+
+    // match
+    socket.on( 'findMatch', () => {
+        let find;
+        users.tails.forEach( tail => {
+            if ( !find ) {
+                const pairing = tail.mp - user.mp;
+                if ( pairing <= 100 && pairing >= -100) { find = tail };
+            };
+        });
+        if ( find ) {
+            socket.to( find.id ).emit( 'findMatch', { user });
+            socket.emit( 'findMatch', { user: find });
+        };
+        users.conectTail( user );
+    });
+
+    let text;
+    socket.on( 'cancelMatch', ( payload ) => {
+        users.deleteTails( user.id );
+        socket.to( payload ).emit( 'cancelMatch' );
+        text = null;
+    });
+    socket.on( 'aceptMatch', ( play ) => {
+        users.deleteTails( user.id );
+        if ( !text ) {
+            text = generarTexto();
+            socket.emit( 'genText', text );
+        };
+        socket.to( play.pvp ).emit( 'aceptMatch', { user, text } );
+    });
+    socket.on( 'qualifyingStarted', () => { users.deleteTails( user.id ); text = null });
+
+    socket.on( 'phrasesQualify', ( payload ) => {
+        socket.to( payload.to ).emit( 'phrasesQualify', { phrases: payload.phrases, user: payload.user } );
+    });
+    socket.on( 'finishQuialify', ( payload ) => {
+        const date = new Date();
+        payload.date = date;
+        socket.emit( 'finishQuialify', ( payload ) );
+        socket.to( payload.to ).emit( 'finishQuialify', ( payload ) );
+    });
+
 
 };
 
