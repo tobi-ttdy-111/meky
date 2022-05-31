@@ -12,6 +12,7 @@ let chat = null;
 let acept = null;
 let pvp = null;
 let aceptPvp = null;
+let ultMessage;
 localStorage.setItem( 'pvp', '' );
 localStorage.setItem( 'text', '' );
 
@@ -84,6 +85,7 @@ const socketConnection = () => {
     socket.on( 'getChat', ( payload ) => renderChat( payload ));
 
     socket.on( 'sendMessage', ( payload ) => {
+        ultMessage = payload;
         if ( payload.to == 'general' ) {
             if ( chat != 'general' ) { messageCount.innerHTML = '▼'; messageCount.style.display = ''; return }
             if ( payload.to == 'general' ) {
@@ -229,8 +231,11 @@ const chargeChat = () => {
     });
     window.addEventListener( 'keypress', ( e ) => {
         if ( e.keyCode === 13 && chat != null && message.value.trim().length > 0 ) {
-            socket.emit( 'sendMessage', { of: user._id, to: chat, message: message.value, name: user.name });
-            message.value = '';
+            let payload = { to: chat, name: user.name, message: message.value };
+            if ( JSON.stringify( ultMessage ) !== JSON.stringify( payload ) ) {
+                socket.emit( 'sendMessage', { of: user._id, to: chat, message: message.value, name: user.name } );
+                message.value = '';
+            };
         };
     });
 
