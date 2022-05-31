@@ -15,6 +15,7 @@ let aceptPvp = null;
 let ultMessage;
 localStorage.setItem( 'pvp', '' );
 localStorage.setItem( 'text', '' );
+localStorage.setItem( 'match', '' );
 
 // VALIDAR USER
 const chargeInformation = async( socket ) => {
@@ -182,6 +183,8 @@ const socketConnection = () => {
 
     socket.on( 'genText', ( text ) => { localStorage.setItem( 'text', text ); console.log( text ) } );
 
+    socket.on( 'allMatchs', ( matchs ) => { renderMatchs( matchs ) });
+
 };
 
 
@@ -239,6 +242,32 @@ const chargeChat = () => {
         };
     });
 
+};
+
+
+// renderMatchs
+const matchsHtml = document.querySelector( '#matchs' );
+const renderMatchs = ( matchs ) => {
+    matchsHtml.innerHTML = '';
+    matchs.forEach( match => {
+        if ( match.type != 'private' && match.members.length > 0 && !match.active ) {
+            matchsHtml.innerHTML += `
+            <tr>
+            <td class="ocult">${ match.owner.name }</td>
+            <td class="ocult">${ match.name }</td>
+            <td class="success">${ match.members.length }/10</td>
+            <td><a class="unitMatch" id="${ match.uid }">Unirme</a></td>
+            </tr>
+            `;
+        };
+    });
+    const matchsList = document.querySelectorAll( '.unitMatch' );
+    matchsList.forEach( match => {
+        match.addEventListener( 'click', () => {
+            localStorage.setItem( 'match', match.id );
+            window.location = './room.html';
+        });
+    });
 };
 
 
@@ -508,6 +537,7 @@ logout.addEventListener( 'click', () => {
 // KEY PRESS
 window.addEventListener( 'keypress', async( e ) => {
 
+    if ( e.keyCode === 13 && formsPlay.style.top == '50%' ) { e.preventDefault() };
     if ( e.keyCode === 13 && formsDelete.style.top == '50%' ) {
         e.preventDefault();
         await fetch( `${ domain }/user`, {
@@ -594,4 +624,51 @@ aceptMatch.addEventListener( 'click', () => {
     } else {
         socket.emit( 'findMatch' );
     };
+});
+
+
+const createPublic = document.querySelector( '#createPublic' );
+const createPrivate = document.querySelector( '#createPrivate' );
+const unitPrivate = document.querySelector( '#unitPrivate' );
+const namePublic = document.querySelector( '#namePublic' );
+const namePrivate = document.querySelector( '#namePrivate' );
+const idPrivate = document.querySelector( '#idPrivate' );
+
+const dangerPublic = document.querySelector( '#dangerPublic' );
+const dangerPrivate = document.querySelector( '#dangerPrivate' );
+const dangerUnit = document.querySelector( '#dangerUnit' );
+
+
+createPublic.addEventListener( 'click', () => {
+    if ( namePublic.value.length > 0 ) {
+        socket.emit( 'createMatch', { name: namePublic.value, type: 'public' });
+        dangerPublic.innerHTML = 'Creando la sala...';
+        socket.on( 'createMatch', ( payload ) => {
+            localStorage.setItem( 'match', payload );
+            window.location = './room.html';
+        });
+    } else { dangerPublic.innerHTML = `Ingresa el nombre de tu partida` }
+});
+createPrivate.addEventListener( 'click', () => {
+    if ( namePrivate.value.length > 0 ) {
+        socket.emit( 'createMatch', { name: namePublic.value, type: 'private' });
+        dangerPrivate.innerHTML = 'Creando la sala...';
+        socket.on( 'createMatch', ( payload ) => {
+            localStorage.setItem( 'match', payload );
+            window.location = './room.html';
+        });
+    } else { dangerPrivate.innerHTML = `Ingresa el nombre de tu partida` }
+});
+unitPrivate.addEventListener( 'click', () => {
+    if ( unitPrivate.value.length > 0 ) {
+        socket.emit( 'validateMatch', { uid: idPrivate.value });
+        dangerUnit.innerHTML = 'Validando id...';
+        socket.on( 'validateMatch', ( payload ) => {
+            if ( !payload ) {
+                return dangerUnit.innerHTML = 'No se encontro ninguna sala';
+            };
+            localStorage.setItem( 'match', payload.uid );
+            window.location = './room.html';
+        });
+    } else { dangerUnit.innerHTML = `Ingresa el id de la partida` }
 });

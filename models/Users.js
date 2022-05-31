@@ -88,25 +88,56 @@ class Users {
     };
 
 
+    // matchs
+    addMatch( match ) {
+        this.matchs.unshift( match );
+    };
+    deleteMatch( uid ) {
+        let newMatchs = [];
+        this.matchs.forEach( match => {
+            if ( match.uid != uid ) {
+                newMatchs.push( match );
+            };
+        });
+        this.matchs = newMatchs;
+    };
+    connectMatch( user, uid ) {
+        this.matchs.forEach( match => {
+            if ( match.uid == uid ) {
+                match.members.push( user );
+            };
+        });
+    };
+    disconnectMatch( user, uid ) {
+        this.matchs.forEach( match => {
+            if ( match.uid == uid ) {
+                let newMembers = [];
+                match.members.forEach( member => {
+                    if ( member.id != user.id ) { newMembers.push( member ) };
+                });
+                match.members = newMembers;
+            };
+        });
+    };
+    getMatch( uid ) {
+        let matchRet;
+        this.matchs.forEach( match => {
+            if ( match.uid == uid ) {
+                matchRet = match
+            };
+        });
+        return matchRet;
+    };
+    activeMatch( uid ) {
+        this.matchs.forEach( match => {
+            if ( match.uid == uid ) {
+                match.active = true
+            };
+        });
+    };
+
 };
 
 
 // exports
 module.exports = Users;
-
-
-// let matchs = [
-
-//     {
-//         uid: 21392387ldh20o893reu,
-//         users: {
-//             asdjflkajdfasdfasdf,
-//             asdfa,sd
-//             fas,d
-//             fasdf,a
-//             sdf,a
-//             sdfas,df
-//         }
-//     }
-
-// ]

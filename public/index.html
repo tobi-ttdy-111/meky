@@ -25,23 +25,26 @@
         <form>
             <small>Partida pública</small>
             <div class="actions">
-                <input type="text" placeholder="Nombre">
-                <input type="submit" value="Crear" class="primary">
+                <input type="text" placeholder="Nombre" id="namePublic">
+                <input type="button" value="Crear" class="primary" id="createPublic">
             </div>
+            <small class="danger" id="dangerPublic"><br></small>
         </form>
         <form>
             <small>Partida privada</small>
             <div class="actions">
-                <input type="text" placeholder="Nombre">
-                <input type="submit" value="Crear" class="danger">
+                <input type="text" placeholder="Nombre" id="namePrivate">
+                <input type="button" value="Crear" class="danger" id="createPrivate">
             </div>
+            <small class="danger" id="dangerPrivate"><br></small>
         </form>
         <form>
             <small>Unirse a privada</small>
             <div class="actions">
-                <input type="text" placeholder="Código">
-                <input type="submit" value="Unirse" class="success">
+                <input type="text" placeholder="Código" id="idPrivate">
+                <input type="button" value="Unirse" class="success" id="unitPrivate">
             </div>
+            <small class="danger" id="dangerUnit"><br></small>
         </form>
     </div>
     <div class="forms" id="formsQualify">
@@ -163,86 +166,8 @@
                                 <th>¿Deseas unirte?</th>
                             </tr>
                         </thead>
-                        <!-- <tbody>
-                            <tr>
-                                <td class="ocult">LicAaron</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">AnonymusPro</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">Veggetta 777  </td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">bbakka</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">hola</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                            <tr>
-                                <td class="ocult">tobi_ttdy_111</td>
-                                <td class="ocult">Aki va el nombre</td>
-                                <td class="success" >15/30</td>
-                                <td><a class="notPass">Unirme</a></td>
-                            </tr>
-                        </tbody> -->
+                        <tbody id="matchs">
+                        </tbody>
                     </table>
                 </div>
             </div>

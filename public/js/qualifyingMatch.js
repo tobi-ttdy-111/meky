@@ -165,13 +165,6 @@ const renderRank = ( user1, user2 ) => {
     };
 
 };
-
-
-
-
-
-
-// keyPress
 window.addEventListener( 'keypress', async( e ) => {
     if ( totalLetras == parcialLetras ) { timeInicio = new Date() };
     let key = e.key.toLocaleLowerCase(); let textoNuevo = '';

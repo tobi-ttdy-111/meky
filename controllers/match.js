@@ -27,7 +27,14 @@ const postMatch = async( req = request, res = response ) => {
         let sumaRank = 0;
         let totalClasifs = 0;
         history.forEach( match => {
-            if ( match.type == 'Partida clasificatoria' ) { sumaRank += match.rank; totalClasifs += 1; };
+            if ( match.type == 'Partida clasificatoria' || match.type == 'Partida normal' ) {
+                if ( match.rank != 1 ) {
+                    sumaRank += 2;
+                } else {
+                    sumaRank += match.rank;
+                };
+                totalClasifs += 1;
+            };
         });
         totalClasifs += 1;
         sumaRank += rank;
