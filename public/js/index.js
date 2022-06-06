@@ -1,10 +1,11 @@
 
+
 const token = localStorage.getItem( 'token' );
 let user;try {user = JSON.parse( localStorage.getItem( 'user' ) );} catch ( err ) { window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
 if ( !token || !user ) {window.location = './account.html';removeItem( 'token' );localStorage.removeItem( 'user' );};
 
 const profileUser = document.querySelector( '#profileUser' );
-const renderProfile = ( user ) => {if ( user.img ) {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.innerHTML = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
+const renderProfile = ( user ) => {if ( user.img ) {profileUser.textContent  = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">Binvenido!</small></div><div class="profile-photo"><div><img src="${ user.img }"></div></div>`;} else {profileUser.textContent  = `<div class="info"><p>Hola, <b>${ user.name }</b></p><small class="small-text">¿Ya estás preparado?</small></div><span class="people"></span>`;};};
 renderProfile( user );
 const messages = document.querySelector( '#messages' );
 const messageCount = document.querySelector( '#messageCount' );
@@ -93,9 +94,11 @@ const socketConnection = () => {
                 messages.innerHTML += `
                 <div class="message">
                 <p><span class="player ${ aleatoryColor() }">${ payload.name } </span></p>
-                <p>${ payload.message }</p>
+                <p id="here"></p>
                 </div>
                 `;
+                const here = document.querySelector( '.here' );
+                here.textContent = payload.message;
                 messages.scrollTop = 100000000000;
             };
             return;
@@ -104,9 +107,10 @@ const socketConnection = () => {
             messages.innerHTML += `
                 <div class="message">
                 <p><span class="player ${ aleatoryColor() }">${ payload.name } </span></p>
-                <p>${ payload.message }</p>
+                <p id="here"></p>
                 </div>
             `;
+            here.textContent = payload.message;
             messages.scrollTop = 100000000000;
             return;
         };
